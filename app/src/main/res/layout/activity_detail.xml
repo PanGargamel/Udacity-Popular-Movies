@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pl.piotrskiba.android.popularmovies.DetailActivity"
+    android:background="@color/background">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/target_layout"
+            android:visibility="invisible"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/iv_poster"
+                    android:contentDescription="@string/poster_content_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/poster_height_detail"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/title_text_size_detail"
+                        android:layout_marginTop="@dimen/text_margin_detail"
+                        android:layout_marginLeft="@dimen/text_margin_detail"
+                        android:layout_marginRight="@dimen/text_margin_detail"
+                        android:textColor="@color/text"/>
+                    <TextView
+                        android:id="@+id/tv_original_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/subtitle_text_size_detail"
+                        android:layout_marginLeft="@dimen/text_margin_detail"
+                        android:layout_marginRight="@dimen/text_margin_detail"
+                        android:textColor="@color/text"/>
+
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/info_section_padding_top"
+                        android:layout_marginLeft="@dimen/text_margin_detail"
+                        android:layout_marginRight="@dimen/text_margin_detail"
+                        android:textColor="@color/text"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/ic_date_range_white_24dp"
+                        android:drawableStart="@drawable/ic_date_range_white_24dp"
+                        android:drawablePadding="@dimen/text_margin_detail" />
+                    <TextView
+                        android:id="@+id/tv_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/info_section_padding_top"
+                        android:layout_marginLeft="@dimen/text_margin_detail"
+                        android:layout_marginRight="@dimen/text_margin_detail"
+                        android:textColor="@color/text"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/ic_language_white_24dp"
+                        android:drawableStart="@drawable/ic_language_white_24dp"
+                        android:drawablePadding="@dimen/text_margin_detail" />
+                    <TextView
+                        android:id="@+id/tv_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/info_section_padding_top"
+                        android:layout_marginLeft="@dimen/text_margin_detail"
+                        android:layout_marginRight="@dimen/text_margin_detail"
+                        android:textColor="@color/text"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/text_margin_detail"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:padding="@dimen/description_padding" />
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@drawable/ic_error_outline_red_80dp"
+            android:contentDescription="@string/erroricon_content_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/error_image_padding" />
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/error"
+            android:textSize="@dimen/error_text_size"
+            android:textColor="@color/text"
+            android:textAlignment="center"
+            android:paddingTop="@dimen/error_text_padding" />
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        android:layout_width="@dimen/progressbar_size"
+        android:layout_height="@dimen/progressbar_size"
+        android:layout_gravity="center"/>
+</FrameLayout>

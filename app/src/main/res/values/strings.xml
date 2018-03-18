@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <!-- activity_main.xml -->
+    <string name="menu_sort_title">Sort</string>
+    <string name="menu_sort_by_popular">Popular</string>
+    <string name="menu_sort_by_toprated">Top rated</string>
+    <string name="menu_about_title">About</string>
+
+    <!-- activity_detail.xml -->
+    <string name="rating">%1$.1f / 10</string>
+    <string name="error">Could not load movie data. Check for Internet connection and try again.</string>
+    <string name="poster_content_description">Movie poster</string>
+    <string name="erroricon_content_description">Error icon</string>
+
+    <!-- activity_about.xml -->
+    <string name="about_author">Created by Piotr Skiba</string>
+    <string name="about_webpage">http://piotrskiba.pl/</string>
+    <string name="about_udacity_contribution">This project has been created for Udacity Google Developer Nanodegree.</string>
+    <string name="about_tmdb_contribution">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+    <string name="about_tmdb_image_content_description">TMDb contribution</string>
+
+</resources>

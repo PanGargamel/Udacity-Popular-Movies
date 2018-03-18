@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_poster"
+        android:contentDescription="@string/poster_content_description"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/poster_height_main"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_box_height"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/text"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:layout_marginLeft="@dimen/line_margin_left_right"
+            android:layout_marginRight="@dimen/line_margin_left_right"
+            android:layout_marginBottom="@dimen/line_margin_bottom"
+            android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
+</LinearLayout>

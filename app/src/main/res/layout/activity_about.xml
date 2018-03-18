@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="pl.piotrskiba.android.popularmovies.AboutActivity"
+    android:background="@color/background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/title_padding_top"
+        android:paddingBottom="@dimen/title_padding_bottom"
+        android:textSize="@dimen/title_text_size"
+        android:text="@string/app_name"
+        android:textColor="@color/text"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_author"
+        android:textColor="@color/text"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_webpage"
+        android:textColor="@color/text"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/contribution_padding_top"
+        android:text="@string/about_udacity_contribution"
+        android:textColor="@color/text"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/contribution_padding_top"
+        android:text="@string/about_tmdb_contribution"
+        android:textColor="@color/text"
+        android:textAlignment="center"/>
+    <ImageView
+        android:src="@drawable/ic_tmdb_contribution"
+        android:contentDescription="@string/about_tmdb_image_content_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="@dimen/contribution_image_padding_top"
+        android:layout_marginBottom="@dimen/contribution_image_margin_bottom" />
+
+</LinearLayout>
