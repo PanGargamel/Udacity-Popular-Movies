@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Popular Movies</string>
+    <string name="app_name" translatable="false">Popular Movies</string>
 
     <!-- activity_main.xml -->
     <string name="menu_sort_title">Sort</string>
@@ -15,7 +15,7 @@
 
     <!-- activity_about.xml -->
     <string name="about_author">Created by Piotr Skiba</string>
-    <string name="about_webpage">http://piotrskiba.pl/</string>
+    <string name="about_webpage" translatable="false">http://piotrskiba.pl/</string>
     <string name="about_udacity_contribution">This project has been created for Udacity Google Developer Nanodegree.</string>
     <string name="about_tmdb_contribution">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
     <string name="about_tmdb_image_content_description">TMDb contribution</string>

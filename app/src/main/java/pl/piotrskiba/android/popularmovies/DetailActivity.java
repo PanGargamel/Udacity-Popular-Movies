@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,7 +67,6 @@ public class DetailActivity extends AppCompatActivity {
             String movieId = params[0];
 
             URL url = NetworkUtils.buildDetailsUrl(movieId);
-            Log.i("url", url.toString());
 
             try {
                 String response = NetworkUtils.getHttpResponse(url);

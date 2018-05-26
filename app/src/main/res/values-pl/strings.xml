@@ -1,0 +1,20 @@
+<resources>
+    <!-- activity_main.xml -->
+    <string name="menu_sort_title">Sortowanie</string>
+    <string name="menu_sort_by_popular">Popularne</string>
+    <string name="menu_sort_by_toprated">Najwyżej oceniane</string>
+    <string name="menu_about_title">Informacje</string>
+
+    <!-- activity_detail.xml -->
+    <string name="rating">%1$.1f / 10</string>
+    <string name="error">Wystąpił błąd przy pobieraniu danych. Sprawdź czy masz połączenie z Internetem oraz spróbuj ponownie.</string>
+    <string name="poster_content_description">Plakat filmu</string>
+    <string name="erroricon_content_description">Ikona błędu</string>
+
+    <!-- activity_about.xml -->
+    <string name="about_author">Autor: Piotr Skiba</string>
+    <string name="about_udacity_contribution">Ten projekt został stworzony na potrzeby kursu Udacity Google Developer Nanodegree.</string>
+    <string name="about_tmdb_contribution">Ten produkt używa interfejsu TMDb API, lecz nie jest zatwierdzony ani certyfikowany przez TMDb.</string>
+    <string name="about_tmdb_image_content_description">logo TMDb</string>
+
+</resources>
