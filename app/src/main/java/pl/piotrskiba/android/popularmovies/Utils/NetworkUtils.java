@@ -7,14 +7,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class NetworkUtils {
 
     // PUT YOUR API KEY HERE
     private final static String API_KEY = "";
-
-    private final static String LANGUAGE = "en-US";
 
     private final static String BASE_URL = "https://api.themoviedb.org/";
     private final static String BASE_PATH = "/3/movie/";
@@ -30,12 +29,11 @@ public class NetworkUtils {
     private final static String PARAM_LANGUAGE = "language";
     private final static String PARAM_PAGE = "page";
 
-
     public static URL buildUrl(String path, int page){
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .path(BASE_PATH + path)
                 .appendQueryParameter(PARAM_APIKEY, API_KEY)
-                .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
+                .appendQueryParameter(PARAM_LANGUAGE, getPhoneLanguage())
                 .appendQueryParameter(PARAM_PAGE, String.valueOf(page))
                 .build();
 
@@ -54,7 +52,7 @@ public class NetworkUtils {
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .path(BASE_PATH + id)
                 .appendQueryParameter(PARAM_APIKEY, API_KEY)
-                .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
+                .appendQueryParameter(PARAM_LANGUAGE, getPhoneLanguage())
                 .build();
 
         URL builtUrl = null;
@@ -101,6 +99,15 @@ public class NetworkUtils {
         }
         finally{
             connection.disconnect();
+        }
+    }
+
+    private static String getPhoneLanguage(){
+        if(Locale.getDefault().getLanguage().equals("pl")){
+            return "pl-PL";
+        }
+        else{
+            return "en-US";
         }
     }
 }
