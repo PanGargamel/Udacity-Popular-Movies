@@ -47,7 +47,19 @@
                         android:layout_marginLeft="@dimen/text_margin_detail"
                         android:layout_marginRight="@dimen/text_margin_detail"
                         android:textColor="@color/text"/>
-
+                    <TextView
+                        android:id="@+id/tv_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/info_section_padding_top"
+                        android:layout_marginLeft="@dimen/text_margin_detail"
+                        android:layout_marginRight="@dimen/text_margin_detail"
+                        android:textColor="@color/text"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/ic_info_outline_white_24dp"
+                        android:drawableStart="@drawable/ic_info_outline_white_24dp"
+                        android:drawablePadding="@dimen/text_margin_detail"/>
                     <TextView
                         android:id="@+id/tv_date"
                         android:layout_width="match_parent"

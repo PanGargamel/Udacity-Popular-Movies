@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name" translatable="false">Popular Movies</string>
 
+    <string name="api_state_rumored" translatable="false">Rumored</string>
+    <string name="api_state_planned" translatable="false">Planned</string>
+    <string name="api_state_inproduction" translatable="false">In Production</string>
+    <string name="api_state_postproduction" translatable="false">Post Production</string>
+    <string name="api_state_released" translatable="false">Released</string>
+    <string name="api_state_canceled" translatable="false">Canceled</string>
+
     <!-- activity_main.xml -->
     <string name="menu_sort_title">Sort</string>
     <string name="menu_sort_by_popular">Popular</string>
@@ -13,6 +20,11 @@
     <string name="poster_content_description">Movie poster</string>
     <string name="erroricon_content_description">Error icon</string>
     <string name="no_overview_available">There\'s no movie overview available for your language.</string>
+    <string name="state_rumored">Rumored</string>
+    <string name="state_planned">Planned</string>
+    <string name="state_inproduction">In Production</string>
+    <string name="state_postproduction">Post Production</string>
+    <string name="state_canceled">Canceled</string>
 
     <!-- activity_about.xml -->
     <string name="about_author">Created by Piotr Skiba</string>

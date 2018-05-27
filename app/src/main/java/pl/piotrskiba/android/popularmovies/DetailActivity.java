@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mMovieDescription;
     private TextView mMovieRating;
     private TextView mMovieLanguage;
+    private TextView mMovieStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class DetailActivity extends AppCompatActivity {
         mMovieDescription = findViewById(R.id.tv_description);
         mMovieRating = findViewById(R.id.tv_rating);
         mMovieLanguage = findViewById(R.id.tv_language);
+        mMovieStatus = findViewById(R.id.tv_status);
 
         Intent parentIntent = getIntent();
         if(parentIntent.hasExtra(Intent.EXTRA_UID)){
@@ -104,32 +107,62 @@ public class DetailActivity extends AppCompatActivity {
                     mMovieDescription.setText(R.string.no_overview_available);
                 else
                     mMovieDescription.setText(movie.getOverview());
-                mMovieDate.setText(movie.getReleaseDate());
 
-            /*
-                Convert 2-letter language code to language
-                Inspiration: http://www.java2s.com/Code/Java/I18N/Getalistofcountrynames.htm
-            */
+                if(!movie.getReleaseDate().equals(""))
+                    mMovieDate.setText(movie.getReleaseDate());
+                else{
+                    ViewGroup parent = (ViewGroup) mMovieDate.getParent();
+                    parent.removeView(mMovieDate);
+                }
+
+                /*
+                    Convert 2-letter language code to language
+                    Inspiration: http://www.java2s.com/Code/Java/I18N/Getalistofcountrynames.htm
+                */
                 Locale[] locales = Locale.getAvailableLocales();
                 for (Locale locale : locales) {
                     String langCode = locale.getLanguage();
-                    String lang = locale.getDisplayLanguage();
                     if (langCode.equals(movie.getOriginalLanguage())) {
-                        mMovieLanguage.setText(lang);
+                        mMovieLanguage.setText(locale.getDisplayLanguage());
                         break;
                     }
                 }
-
+                if(mMovieLanguage.getText().equals("")){
+                    ViewGroup parent = (ViewGroup) mMovieLanguage.getParent();
+                    parent.removeView(mMovieLanguage);
+                }
 
                 String ratingText = getString(R.string.rating, movie.getVoteAverage());
                 mMovieRating.setText(ratingText);
 
-                if (movie.getVoteAverage() < 4) {
-                    mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_bad, 0, 0, 0);
-                } else if (movie.getVoteAverage() >= 7) {
-                    mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_good, 0, 0, 0);
-                } else {
-                    mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_neutral, 0, 0, 0);
+                if(movie.getVoteAverage() > 0) {
+                    if (movie.getVoteAverage() < 4) {
+                        mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_bad, 0, 0, 0);
+                    } else if (movie.getVoteAverage() >= 7) {
+                        mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_good, 0, 0, 0);
+                    } else {
+                        mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_neutral, 0, 0, 0);
+                    }
+                }
+                else{
+                    ViewGroup parent = (ViewGroup) mMovieRating.getParent();
+                    parent.removeView(mMovieRating);
+                }
+
+                if(movie.getStatus().equals(getResources().getString(R.string.api_state_rumored)))
+                    mMovieStatus.setText(R.string.state_rumored);
+                else if(movie.getStatus().equals(getResources().getString(R.string.api_state_planned)))
+                    mMovieStatus.setText(R.string.state_planned);
+                else if(movie.getStatus().equals(getResources().getString(R.string.api_state_inproduction)))
+                    mMovieStatus.setText(R.string.state_inproduction);
+                else if(movie.getStatus().equals(getResources().getString(R.string.api_state_postproduction)))
+                    mMovieStatus.setText(R.string.state_postproduction);
+                else if(movie.getStatus().equals(getResources().getString(R.string.api_state_canceled)))
+                    mMovieStatus.setText(R.string.state_canceled);
+                else{
+                    // released
+                    ViewGroup parent = (ViewGroup) mMovieStatus.getParent();
+                    parent.removeView(mMovieStatus);
                 }
 
                 showDefaultLayout();
