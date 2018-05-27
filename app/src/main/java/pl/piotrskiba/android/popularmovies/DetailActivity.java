@@ -100,7 +100,10 @@ public class DetailActivity extends AppCompatActivity {
                     parent.removeView(mMovieOriginalTitle);
                 }
 
-                mMovieDescription.setText(movie.getOverview());
+                if(movie.getOverview().equals(""))
+                    mMovieDescription.setText(R.string.no_overview_available);
+                else
+                    mMovieDescription.setText(movie.getOverview());
                 mMovieDate.setText(movie.getReleaseDate());
 
             /*

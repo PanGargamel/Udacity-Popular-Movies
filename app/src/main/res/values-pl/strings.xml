@@ -10,6 +10,7 @@
     <string name="error">Wystąpił błąd przy pobieraniu danych. Sprawdź czy masz połączenie z Internetem oraz spróbuj ponownie.</string>
     <string name="poster_content_description">Plakat filmu</string>
     <string name="erroricon_content_description">Ikona błędu</string>
+    <string name="no_overview_available">Ten film nie posiada opisu dla twojego języka.</string>
 
     <!-- activity_about.xml -->
     <string name="about_author">Autor: Piotr Skiba</string>

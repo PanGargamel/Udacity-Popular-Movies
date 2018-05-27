@@ -12,6 +12,7 @@
     <string name="error">Could not load movie data. Check for Internet connection and try again.</string>
     <string name="poster_content_description">Movie poster</string>
     <string name="erroricon_content_description">Error icon</string>
+    <string name="no_overview_available">There\'s no movie overview available for your language.</string>
 
     <!-- activity_about.xml -->
     <string name="about_author">Created by Piotr Skiba</string>
