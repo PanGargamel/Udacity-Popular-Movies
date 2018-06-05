@@ -10,10 +10,11 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Scanner;
 
+import pl.piotrskiba.android.popularmovies.BuildConfig;
+
 public class NetworkUtils {
 
-    // PUT YOUR API KEY HERE
-    private final static String API_KEY = "";
+    private final static String API_KEY = BuildConfig.API_KEY;
 
     private final static String BASE_URL = "https://api.themoviedb.org/";
     private final static String BASE_PATH = "/3/movie/";
