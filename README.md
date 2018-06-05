@@ -1,4 +1,7 @@
 # Udacity-Popular-Movies
 Udacity Google Developer Nanodegree project
 
-TMDb API Key location: /app/java/pl.piotrskiba.android.popularmovies/Utils/NetworkUtils
+You should put your TMDb API Key in gradle.properties file, using the following syntax:
+```
+API_KEY="abcdefghijklmnopqrstuvwxyz'
+```
