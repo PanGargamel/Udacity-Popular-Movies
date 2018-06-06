@@ -3,6 +3,7 @@ package pl.piotrskiba.android.popularmovies.models;
 
 public class DetailedMovie {
 
+    private final int id;
     private final String original_language;
     private final String original_title;
     private final String overview;
@@ -12,7 +13,8 @@ public class DetailedMovie {
     private final String title;
     private final double vote_average;
 
-    public DetailedMovie(String original_language, String original_title, String overview, String poster_path, String release_date, String status, String title, double vote_average){
+    public DetailedMovie(int id, String original_language, String original_title, String overview, String poster_path, String release_date, String status, String title, double vote_average){
+        this.id = id;
         this.original_language = original_language;
         this.original_title = original_title;
         this.overview = overview;
@@ -22,6 +24,8 @@ public class DetailedMovie {
         this.title = title;
         this.vote_average = vote_average;
     }
+
+    public int getId(){ return id; }
 
     public String getOriginalLanguage() { return original_language; }
 

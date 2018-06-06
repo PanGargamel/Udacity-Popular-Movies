@@ -34,7 +34,7 @@
             android:textAlignment="center"
             android:paddingTop="@dimen/error_text_padding" />
     </LinearLayout>
-    
+
     <ProgressBar
         android:id="@+id/pb_loading_indicator"
         android:layout_width="@dimen/progressbar_size"

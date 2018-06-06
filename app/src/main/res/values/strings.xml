@@ -8,15 +8,20 @@
     <string name="api_state_released" translatable="false">Released</string>
     <string name="api_state_canceled" translatable="false">Canceled</string>
 
-    <!-- activity_main.xml -->
+    <!-- menu_main.xml -->
     <string name="menu_sort_title">Sort</string>
     <string name="menu_sort_by_popular">Popular</string>
     <string name="menu_sort_by_toprated">Top rated</string>
+    <string name="menu_sort_by_favorites">Favorites</string>
     <string name="menu_about_title">About</string>
+
+    <!-- menu_detailed.xml -->
+    <string name="menu_favorite">Mark as favorite</string>
+    <string name="menu_unfavorite">Unmark as favorite</string>
 
     <!-- activity_detail.xml -->
     <string name="rating">%1$.1f / 10</string>
-    <string name="error">Could not load movie data. Check for Internet connection and try again.</string>
+    <string name="error">Could not load movie data.\nCheck for Internet connection and try again.\nYou can still access your favorite movies.</string>
     <string name="poster_content_description">Movie poster</string>
     <string name="erroricon_content_description">Error icon</string>
     <string name="no_overview_available">There\'s no movie overview available for your language.</string>
@@ -25,6 +30,8 @@
     <string name="state_inproduction">In Production</string>
     <string name="state_postproduction">Post Production</string>
     <string name="state_canceled">Canceled</string>
+    <string name="marked_as_favorite">Marked as favorite!</string>
+    <string name="unmarked_as_favorite">Movie removed from favorites</string>
 
     <!-- activity_about.xml -->
     <string name="about_author">Created by Piotr Skiba</string>

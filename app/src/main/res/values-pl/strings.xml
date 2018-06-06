@@ -1,13 +1,18 @@
 <resources>
-    <!-- activity_main.xml -->
+    <!-- menu_main.xml -->
     <string name="menu_sort_title">Sortowanie</string>
     <string name="menu_sort_by_popular">Popularne</string>
     <string name="menu_sort_by_toprated">Najwyżej oceniane</string>
+    <string name="menu_sort_by_favorites">Ulubione</string>
     <string name="menu_about_title">Informacje</string>
+
+    <!-- menu_detailed.xml -->
+    <string name="menu_favorite">Oznacz jako ulubione</string>
+    <string name="menu_unfavorite">Odznacz jako ulubione</string>
 
     <!-- activity_detail.xml -->
     <string name="rating">%1$.1f / 10</string>
-    <string name="error">Wystąpił błąd przy pobieraniu danych. Sprawdź czy masz połączenie z Internetem oraz spróbuj ponownie.</string>
+    <string name="error">Wystąpił błąd przy pobieraniu danych.\nSprawdź czy masz połączenie z Internetem oraz spróbuj ponownie.\nMożesz nadal przeglądać swoje ulubione filmy.</string>
     <string name="poster_content_description">Plakat filmu</string>
     <string name="erroricon_content_description">Ikona błędu</string>
     <string name="no_overview_available">Ten film nie posiada opisu dla twojego języka.</string>
@@ -16,6 +21,8 @@
     <string name="state_inproduction">W produkcji</string>
     <string name="state_postproduction">Postprodukcja</string>
     <string name="state_canceled">Anulowany</string>
+    <string name="marked_as_favorite">Oznaczono jako ulubiony</string>
+    <string name="unmarked_as_favorite">Usunięto film z ulubionych</string>
 
     <!-- activity_about.xml -->
     <string name="about_author">Autor: Piotr Skiba</string>

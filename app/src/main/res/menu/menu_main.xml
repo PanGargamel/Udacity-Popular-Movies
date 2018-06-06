@@ -15,6 +15,10 @@
                 android:id="@+id/action_sort_by_toprated"
                 android:orderInCategory="2"
                 android:title="@string/menu_sort_by_toprated"/>
+            <item
+                android:id="@+id/action_sort_by_favorites"
+                android:orderInCategory="3"
+                android:title="@string/menu_sort_by_favorites"/>
         </menu>
     </item>
     <item
