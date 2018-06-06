@@ -81,7 +81,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mMovieStatus = findViewById(R.id.tv_status);
 
         LoaderManager loaderManager = getSupportLoaderManager();
-        if(loaderManager.getLoader(CHECK_IF_FAVORITE_LOADER) == null)
+        if (loaderManager.getLoader(CHECK_IF_FAVORITE_LOADER) == null)
             loaderManager.initLoader(CHECK_IF_FAVORITE_LOADER, null, this);
         else
             loaderManager.restartLoader(CHECK_IF_FAVORITE_LOADER, null, this);
@@ -292,8 +292,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             if (!movie.getTitle().equals(movie.getOriginalTitle())) {
                 mMovieOriginalTitle.setText(movie.getOriginalTitle());
             } else {
-                ViewGroup parent = (ViewGroup) mMovieOriginalTitle.getParent();
-                parent.removeView(mMovieOriginalTitle);
+                if(mMovieOriginalTitle != null) { // wasn't it previously removed?
+                    ViewGroup parent = (ViewGroup) mMovieOriginalTitle.getParent();
+                    parent.removeView(mMovieOriginalTitle);
+                    mMovieOriginalTitle = null;
+                }
             }
 
             if(movie.getOverview().equals(""))
@@ -304,8 +307,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             if(!movie.getReleaseDate().equals(""))
                 mMovieDate.setText(movie.getReleaseDate());
             else{
-                ViewGroup parent = (ViewGroup) mMovieDate.getParent();
-                parent.removeView(mMovieDate);
+                if(mMovieDate != null) {
+                    ViewGroup parent = (ViewGroup) mMovieDate.getParent();
+                    parent.removeView(mMovieDate);
+                    mMovieDate = null;
+                }
             }
 
             /*
@@ -321,8 +327,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
             if(mMovieLanguage.getText().equals("")){
-                ViewGroup parent = (ViewGroup) mMovieLanguage.getParent();
-                parent.removeView(mMovieLanguage);
+                if(mMovieLanguage != null) {
+                    ViewGroup parent = (ViewGroup) mMovieLanguage.getParent();
+                    parent.removeView(mMovieLanguage);
+                    mMovieLanguage = null;
+                }
             }
 
             String ratingText = getString(R.string.rating, movie.getVoteAverage());
@@ -338,8 +347,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
             else{
-                ViewGroup parent = (ViewGroup) mMovieRating.getParent();
-                parent.removeView(mMovieRating);
+                if(mMovieRating != null) {
+                    ViewGroup parent = (ViewGroup) mMovieRating.getParent();
+                    parent.removeView(mMovieRating);
+                    mMovieRating = null;
+                }
             }
 
             if(movie.getStatus().equals(getResources().getString(R.string.api_state_rumored)))
@@ -354,8 +366,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 mMovieStatus.setText(R.string.state_canceled);
             else{
                 // released
-                ViewGroup parent = (ViewGroup) mMovieStatus.getParent();
-                parent.removeView(mMovieStatus);
+                if(mMovieStatus != null){
+                    ViewGroup parent = (ViewGroup) mMovieStatus.getParent();
+                    parent.removeView(mMovieStatus);
+                    mMovieStatus = null;
+                }
             }
 
             showDefaultLayout();
