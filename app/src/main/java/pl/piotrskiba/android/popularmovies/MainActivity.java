@@ -3,6 +3,7 @@ package pl.piotrskiba.android.popularmovies;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -61,7 +62,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         mRecyclerView.setAdapter(mMovieListAdapter);
         mRecyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this, 2);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            layoutManager = new GridLayoutManager(this, 2);
+        else
+            layoutManager = new GridLayoutManager(this, 4);
+
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setOnScrollListener(onScrollListener);
 
