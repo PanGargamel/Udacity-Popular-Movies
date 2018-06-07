@@ -1,11 +1,10 @@
 package pl.piotrskiba.android.popularmovies;
 
-import android.annotation.SuppressLint;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,17 +21,15 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
 import pl.piotrskiba.android.popularmovies.database.AppDatabase;
-import pl.piotrskiba.android.popularmovies.database.MovieDao;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
 import pl.piotrskiba.android.popularmovies.models.Movie;
 import pl.piotrskiba.android.popularmovies.models.MovieList;
 
-public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<MovieEntry>> {
+public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler {
 
     private LinearLayout mErrorLayout;
 
@@ -48,8 +45,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private boolean isLoading = false;
 
     private AppDatabase mDb;
-
-    private int FAVORITE_MOVIES_LOADER = 20;
+    private MovieList mFavoriteMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,56 +70,14 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         new FetchMoviesTask().execute(params);
 
         mDb = AppDatabase.getInstance(getApplicationContext());
+
+        loadFavoriteMovies();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader<List<MovieEntry>> onCreateLoader(int id, Bundle args) {
-        Log.d("loader", "creating new loader");
-        return new AsyncTaskLoader<List<MovieEntry>>(this) {
-
-            @Override
-            protected void onStartLoading() {
-                forceLoad();
-                super.onStartLoading();
-            }
-
-            @Override
-            public List<MovieEntry> loadInBackground() {
-                Log.d("loader", "loading data in background");
-                return mDb.movieDao().loadAllMovies();
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<MovieEntry>> loader, List<MovieEntry> data) {
-
-        Log.d("loader", "load finished");
-        List<MovieEntry> favoriteMovies = data;
-        Movie[] simpleFavoriteMovies = new Movie[favoriteMovies.size()];
-
-        for(int i = 0; i < favoriteMovies.size(); i++){
-            MovieEntry movieEntry = favoriteMovies.get(i);
-            Movie movie = new Movie(movieEntry.getPosterPath(), movieEntry.getMovieId(), movieEntry.getTitle());
-            simpleFavoriteMovies[i] = movie;
-        }
-
-        MovieList movieList = new MovieList(simpleFavoriteMovies);
-        mMovieListAdapter.clearData();
-        mMovieListAdapter.appendData(movieList);
-        Log.d("loader", "loaded " + simpleFavoriteMovies.length + " favorite movies");
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<MovieEntry>> loader) {
-
-    }
 
     public class FetchMoviesTask extends AsyncTask<FetchMoviesTaskParams, Void, MovieList>{
         @Override
         protected void onPreExecute() {
-            Log.d("loader", "fetching movies from Internet...");
             super.onPreExecute();
             isLoading = true;
         }
@@ -192,35 +146,31 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_sort_by_popular){
-            Log.d("loader", "selected popular");
-            mMovieListAdapter.clearData();
+            if(currentSorting != NetworkUtils.PATH_POPULAR) {
+                currentSorting = NetworkUtils.PATH_POPULAR;
 
-            currentSorting = NetworkUtils.PATH_POPULAR;
-            FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-            new FetchMoviesTask().execute(params);
+                mMovieListAdapter.clearData();
+                FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
+                new FetchMoviesTask().execute(params);
+            }
             return true;
         }
         else if(item.getItemId() == R.id.action_sort_by_toprated){
-            Log.d("loader", "selected top rated");
-            mMovieListAdapter.clearData();
+            if(currentSorting != NetworkUtils.PATH_TOP_RATED) {
+                currentSorting = NetworkUtils.PATH_TOP_RATED;
 
-            currentSorting = NetworkUtils.PATH_TOP_RATED;
-            FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-            new FetchMoviesTask().execute(params);
+                mMovieListAdapter.clearData();
+                FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
+                new FetchMoviesTask().execute(params);
+            }
             return true;
         }
         else if(item.getItemId() == R.id.action_sort_by_favorites){
-            Log.d("loader", "selected favorites");
-            currentSorting = SORTING_FAVORITES;
-            mMovieListAdapter.clearData();
+            if(currentSorting != SORTING_FAVORITES) {
+                currentSorting = SORTING_FAVORITES;
 
-            LoaderManager loaderManager = getSupportLoaderManager();
-            Loader<List<MovieEntry>> loader = loaderManager.getLoader(FAVORITE_MOVIES_LOADER);
-
-            if(loader == null){
-                loaderManager.initLoader(FAVORITE_MOVIES_LOADER, null, this);
-            } else {
-                loaderManager.restartLoader(FAVORITE_MOVIES_LOADER, null, this);
+                mMovieListAdapter.clearData();
+                mMovieListAdapter.appendData(mFavoriteMovies);
             }
             return true;
         }
@@ -231,6 +181,31 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadFavoriteMovies(){
+        Log.d("debb", "actively retrieving data");
+        LiveData<List<MovieEntry>> favoriteMovies = mDb.movieDao().loadAllMovies();
+        favoriteMovies.observe(this, new Observer<List<MovieEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieEntry> movieEntries) {
+                Log.d("debb", "retrieving data because of change");
+                Movie[] simpleFavoriteMovies = new Movie[movieEntries.size()];
+
+                for(int i = 0; i < movieEntries.size(); i++){
+                    MovieEntry movieEntry = movieEntries.get(i);
+                    Movie movie = new Movie(movieEntry.getPosterPath(), movieEntry.getMovieId(), movieEntry.getTitle());
+                    simpleFavoriteMovies[i] = movie;
+                }
+
+                mFavoriteMovies = new MovieList(simpleFavoriteMovies);
+
+                if(currentSorting == SORTING_FAVORITES){
+                    mMovieListAdapter.clearData();
+                    mMovieListAdapter.appendData(mFavoriteMovies);
+                }
+            }
+        });
     }
 
     /*

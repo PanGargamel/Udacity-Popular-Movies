@@ -1,12 +1,11 @@
 package pl.piotrskiba.android.popularmovies;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,21 +19,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import pl.piotrskiba.android.popularmovies.AsyncTasks.CheckIfMovieIsFavoriteTask;
+import pl.piotrskiba.android.popularmovies.AsyncTasks.DeleteMovieTask;
+import pl.piotrskiba.android.popularmovies.AsyncTasks.FetchMovieDetailsTask;
+import pl.piotrskiba.android.popularmovies.AsyncTasks.InsertMovieTask;
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
 import pl.piotrskiba.android.popularmovies.database.AppDatabase;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
+import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
 import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
 
-public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
+public class DetailActivity extends AppCompatActivity {
 
     private LinearLayout mDefaultLayout;
     private LinearLayout mErrorLayout;
@@ -54,11 +54,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     private AppDatabase mDb;
 
-    private int INSERT_MOVIE_LOADER = 21;
-    private int CHECK_IF_FAVORITE_LOADER = 22;
-    private int DELETE_MOVIE_LOADER = 23;
-
     private Boolean isFavorite = false;
+
+    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +78,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mMovieLanguage = findViewById(R.id.tv_language);
         mMovieStatus = findViewById(R.id.tv_status);
 
-        LoaderManager loaderManager = getSupportLoaderManager();
-        if (loaderManager.getLoader(CHECK_IF_FAVORITE_LOADER) == null)
-            loaderManager.initLoader(CHECK_IF_FAVORITE_LOADER, null, this);
-        else
-            loaderManager.restartLoader(CHECK_IF_FAVORITE_LOADER, null, this);
+
+        Intent parentIntent = getIntent();
+        if(parentIntent.hasExtra(Intent.EXTRA_UID)){
+            String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
+            new CheckIfMovieIsFavoriteTask(this, new CheckIfMovieIsFavoriteTaskCompleteListener()).execute(Integer.valueOf(movieId));
+        }
     }
 
     @Override
@@ -112,102 +111,45 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_favorite){
-            LoaderManager loaderManager = getSupportLoaderManager();
-
-            Loader<Void> loader = loaderManager.getLoader(INSERT_MOVIE_LOADER);
-
-            if(loader == null)
-                loaderManager.initLoader(INSERT_MOVIE_LOADER, null, this);
-            else
-                loaderManager.restartLoader(INSERT_MOVIE_LOADER, null, this);
+            new InsertMovieTask(this, new InsertMovieTaskCompleteListener()).execute(mMovie);
         }
         else if(item.getItemId() == R.id.action_unfavorite){
-            LoaderManager loaderManager = getSupportLoaderManager();
-
-            Loader<Void> loader = loaderManager.getLoader(DELETE_MOVIE_LOADER);
-
-            if(loader == null)
-                loaderManager.initLoader(DELETE_MOVIE_LOADER, null, this);
-            else
-                loaderManager.restartLoader(DELETE_MOVIE_LOADER, null, this);
+            new DeleteMovieTask(this, new DeleteMovieTaskCompleteListener()).execute(mMovieEntry);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader onCreateLoader(int id, Bundle args) {
-        if(id == CHECK_IF_FAVORITE_LOADER){
-            return new AsyncTaskLoader<List<MovieEntry>>(this) {
-                @Override
-                protected void onStartLoading() {
-                    forceLoad();
-                    super.onStartLoading();
-                }
-
-                @Override
-                public List<MovieEntry> loadInBackground() {
-                    Intent parentIntent = getIntent();
-                    if(parentIntent.hasExtra(Intent.EXTRA_UID)){
-                        String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
-                        return mDb.movieDao().loadMoviesByMovieId(Integer.valueOf(movieId));
-                    }
-                    return null;
-                }
-            };
-        }
-        else if(id == INSERT_MOVIE_LOADER) {
-            return new AsyncTaskLoader<Void>(this) {
-                @Override
-                protected void onStartLoading() {
-                    forceLoad();
-                    super.onStartLoading();
-                }
-
-                @Override
-                public Void loadInBackground() {
-                    Date date = new Date();
-                    MovieEntry movieEntry = new MovieEntry(mMovie.getId(), mMovie.getOriginalLanguage(),
-                            mMovie.getOriginalTitle(), mMovie.getOverview(), mMovie.getPosterPath(),
-                            mMovie.getReleaseDate(), mMovie.getStatus(), mMovie.getTitle(),
-                            mMovie.getVoteAverage(), date);
-
-                    long id = mDb.movieDao().insertMovie(movieEntry);
-
-                    mMovieEntry = new MovieEntry(id, mMovie.getId(), mMovie.getOriginalLanguage(),
-                            mMovie.getOriginalTitle(), mMovie.getOverview(), mMovie.getPosterPath(),
-                            mMovie.getReleaseDate(), mMovie.getStatus(), mMovie.getTitle(),
-                            mMovie.getVoteAverage(), date);
-                    return null;
-                }
-            };
-        }
-        else if(id == DELETE_MOVIE_LOADER) {
-            return new AsyncTaskLoader<Void>(this) {
-                @Override
-                protected void onStartLoading() {
-                    forceLoad();
-                    super.onStartLoading();
-                }
-
-                @Override
-                public Void loadInBackground() {
-                    mDb.movieDao().deleteMovie(mMovieEntry);
-                    return null;
-                }
-            };
-        }
-        else{
-            return null;
+    public class FetchMovieDetailsTaskCompleteListener implements AsyncTaskCompleteListener<DetailedMovie> {
+        @Override
+        public void onTaskComplete(DetailedMovie result) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            populateUi(result);
         }
     }
 
-    @Override
-    public void onLoadFinished(@NonNull Loader loader, Object data) {
-        LoaderManager loaderManager = getSupportLoaderManager();
+    public class InsertMovieTaskCompleteListener implements AsyncTaskCompleteListener<MovieEntry> {
+        @Override
+        public void onTaskComplete(MovieEntry result) {
+            mMovieEntry = result;
+            isFavorite = true;
+            invalidateOptionsMenu();
+            Toast.makeText(context, R.string.marked_as_favorite, Toast.LENGTH_SHORT).show();
+        }
+    }
 
-        if(loader == loaderManager.getLoader(CHECK_IF_FAVORITE_LOADER)){
-            List<MovieEntry> moviesFromDb = (List<MovieEntry>) data;
+    public class DeleteMovieTaskCompleteListener implements AsyncTaskCompleteListener<Void> {
+        @Override
+        public void onTaskComplete(Void result) {
+            isFavorite = false;
+            invalidateOptionsMenu();
+            Toast.makeText(context, R.string.unmarked_as_favorite, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class CheckIfMovieIsFavoriteTaskCompleteListener implements AsyncTaskCompleteListener<List<MovieEntry>> {
+
+        @Override
+        public void onTaskComplete(List<MovieEntry> moviesFromDb) {
 
             if(moviesFromDb.size() > 0){
                 isFavorite = true;
@@ -229,52 +171,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 if(parentIntent.hasExtra(Intent.EXTRA_UID)){
                     String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
 
-                    new FetchMovieDetailsTask().execute(movieId);
+                    new FetchMovieDetailsTask(new FetchMovieDetailsTaskCompleteListener()).execute(movieId);
                 }
             }
-        }
-        else if(loader == loaderManager.getLoader(INSERT_MOVIE_LOADER)) {
-            isFavorite = true;
-            invalidateOptionsMenu();
-            Toast.makeText(this, R.string.marked_as_favorite, Toast.LENGTH_SHORT).show();
-        }
-        else if(loader == loaderManager.getLoader(DELETE_MOVIE_LOADER)) {
-            isFavorite = false;
-            invalidateOptionsMenu();
-            Toast.makeText(this, R.string.unmarked_as_favorite, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-
-    }
-
-    public class FetchMovieDetailsTask extends AsyncTask<String, Void, DetailedMovie>{
-
-        @Override
-        protected DetailedMovie doInBackground(String... params) {
-            String movieId = params[0];
-
-            URL url = NetworkUtils.buildDetailsUrl(movieId);
-
-            try {
-                String response = NetworkUtils.getHttpResponse(url);
-
-                Gson gson = new Gson();
-
-                return gson.fromJson(response, DetailedMovie.class);
-            }
-            catch(IOException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(DetailedMovie movie) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            populateUi(movie);
         }
     }
 
@@ -383,7 +282,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             if(parentIntent.hasExtra(Intent.EXTRA_UID)){
                 String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
 
-                new FetchMovieDetailsTask().execute(movieId);
+                new FetchMovieDetailsTask(new FetchMovieDetailsTaskCompleteListener()).execute(movieId);
             }
         }
     }
