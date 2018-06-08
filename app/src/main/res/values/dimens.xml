@@ -18,6 +18,8 @@
     <dimen name="subtitle_text_size_detail">10sp</dimen>
     <dimen name="description_padding">10dp</dimen>
     <dimen name="info_section_padding_top">8dp</dimen>
+    <dimen name="button_marginTop">5dp</dimen>
+    <dimen name="button_padding">10dp</dimen>
 
     <dimen name="error_text_size">16sp</dimen>
     <dimen name="error_image_padding">80dp</dimen>
@@ -30,5 +32,11 @@
     <dimen name="contribution_padding_top">20dp</dimen>
     <dimen name="contribution_image_padding_top">180dp</dimen>
     <dimen name="contribution_image_margin_bottom">25dp</dimen>
+
+    <!-- activity_videos.xml -->
+    <dimen name="video_margin_top_bottom">10dp</dimen>
+    <dimen name="video_title_text_size">16sp</dimen>
+    <dimen name="video_title_margin">8dp</dimen>
+    <dimen name="video_thumbnail_height">195dp</dimen>
 
 </resources>

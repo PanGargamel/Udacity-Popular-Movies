@@ -24,6 +24,12 @@
         <activity
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".VideosActivity"
+            android:parentActivityName=".DetailActivity" />
+        <activity
+            android:name=".ReviewsActivity"
+            android:parentActivityName=".DetailActivity" />
     </application>
 
 </manifest>

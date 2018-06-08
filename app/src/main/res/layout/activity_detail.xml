@@ -106,6 +106,35 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
                 android:padding="@dimen/description_padding" />
+
+            <Button
+                android:id="@+id/button_videos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/backgroundLight"
+                android:drawableStart="@drawable/ic_play_arrow_white_24dp"
+                android:drawableLeft="@drawable/ic_play_arrow_white_24dp"
+                android:paddingStart="@dimen/button_padding"
+                android:paddingLeft="@dimen/button_padding"
+                android:layout_marginTop="@dimen/button_marginTop"
+                android:textColor="@color/text"
+                android:onClick="onVideosButtonClick"
+                android:text="@string/see_videos" />
+
+            <Button
+                android:id="@+id/button_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/backgroundLight"
+                android:drawableStart="@drawable/ic_rate_review_white_24dp"
+                android:drawableLeft="@drawable/ic_rate_review_white_24dp"
+                android:paddingStart="@dimen/button_padding"
+                android:paddingLeft="@dimen/button_padding"
+                android:layout_marginTop="@dimen/button_marginTop"
+                android:textColor="@color/text"
+                android:onClick="onReviewsButtonClick"
+                android:text="@string/see_reviews" />
+
         </LinearLayout>
     </ScrollView>
     <LinearLayout

@@ -1,11 +1,7 @@
 package pl.piotrskiba.android.popularmovies;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -84,6 +80,18 @@ public class DetailActivity extends AppCompatActivity {
             String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
             new CheckIfMovieIsFavoriteTask(this, new CheckIfMovieIsFavoriteTaskCompleteListener()).execute(Integer.valueOf(movieId));
         }
+    }
+
+    void onVideosButtonClick(View view){
+        Intent intent = new Intent(this, VideosActivity.class);
+        intent.putExtra(Intent.EXTRA_UID, String.valueOf(mMovie.getId()));
+        startActivity(intent);
+    }
+
+    void onReviewsButtonClick(View view){
+        Intent intent = new Intent(this, ReviewsActivity.class);
+        intent.putExtra(Intent.EXTRA_UID, String.valueOf(mMovie.getId()));
+        startActivity(intent);
     }
 
     @Override

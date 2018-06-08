@@ -7,10 +7,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.Scanner;
 
 import pl.piotrskiba.android.popularmovies.BuildConfig;
+
+import static pl.piotrskiba.android.popularmovies.Utils.textUtils.getPhoneLanguage;
 
 public class NetworkUtils {
 
@@ -25,10 +26,20 @@ public class NetworkUtils {
 
     public final static String PATH_POPULAR = "popular";
     public final static String PATH_TOP_RATED = "top_rated";
+    public final static String PATH_VIDEOS = "videos";
 
     private final static String PARAM_APIKEY = "api_key";
     private final static String PARAM_LANGUAGE = "language";
     private final static String PARAM_PAGE = "page";
+
+
+    private final static String BASE_YOUTUBE_IMAGES_URL = "https://img.youtube.com/";
+    private final static String BASE_YOUTUBE_IMAGES_PATH = "/vi/";
+    private final static String YOUTUBE_THUMBNAIL_FILENAME = "sddefault.jpg";
+
+    private final static String BASE_YOUTUBE_URL = "https://www.youtube.com/";
+    private final static String BASE_YOUTUBE_PATH = "/watch";
+    private final static String PARAM_YOUTUBE_VIDEO = "v";
 
     public static URL buildUrl(String path, int page){
         Uri uri = Uri.parse(BASE_URL).buildUpon()
@@ -83,6 +94,68 @@ public class NetworkUtils {
         return builtUrl;
     }
 
+    public static URL buildVideosUrl(String id, String forcedLanguage){
+
+        Uri uri;
+        if(forcedLanguage != null){
+            uri = Uri.parse(BASE_URL).buildUpon()
+                .path(BASE_PATH  + id + "/" + PATH_VIDEOS)
+                .appendQueryParameter(PARAM_APIKEY, API_KEY)
+                .appendQueryParameter(PARAM_LANGUAGE, forcedLanguage)
+                .build();
+        }
+        else{
+            uri = Uri.parse(BASE_URL).buildUpon()
+                .path(BASE_PATH  + id + "/" + PATH_VIDEOS)
+                .appendQueryParameter(PARAM_APIKEY, API_KEY)
+                .appendQueryParameter(PARAM_LANGUAGE, getPhoneLanguage())
+                .build();
+        }
+
+        URL builtUrl = null;
+        try{
+            builtUrl = new URL(uri.toString());
+        }
+        catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+
+        return builtUrl;
+    }
+
+    public static URL buildYoutubeThumbnailUrl(String movieId){
+        Uri uri = Uri.parse(BASE_YOUTUBE_IMAGES_URL).buildUpon()
+                .path(BASE_YOUTUBE_IMAGES_PATH + movieId + "/" + YOUTUBE_THUMBNAIL_FILENAME)
+                .build();
+
+        URL builtUrl = null;
+        try{
+            builtUrl = new URL(uri.toString());
+        }
+        catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+
+        return builtUrl;
+    }
+
+    public static URL buildYoutubeVideoUrl(String movieId){
+        Uri uri = Uri.parse(BASE_YOUTUBE_URL).buildUpon()
+                .path(BASE_YOUTUBE_PATH)
+                .appendQueryParameter(PARAM_YOUTUBE_VIDEO, movieId)
+                .build();
+
+        URL builtUrl = null;
+        try{
+            builtUrl = new URL(uri.toString());
+        }
+        catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+
+        return builtUrl;
+    }
+
     public static String getHttpResponse(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -100,15 +173,6 @@ public class NetworkUtils {
         }
         finally{
             connection.disconnect();
-        }
-    }
-
-    private static String getPhoneLanguage(){
-        if(Locale.getDefault().getLanguage().equals("pl")){
-            return "pl-PL";
-        }
-        else{
-            return "en-US";
         }
     }
 }

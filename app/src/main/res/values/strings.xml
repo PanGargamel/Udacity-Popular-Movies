@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Popular Movies</string>
+    <string name="default_language" translatable="false">en-US</string>
 
     <string name="api_state_rumored" translatable="false">Rumored</string>
     <string name="api_state_planned" translatable="false">Planned</string>
@@ -7,6 +8,10 @@
     <string name="api_state_postproduction" translatable="false">Post Production</string>
     <string name="api_state_released" translatable="false">Released</string>
     <string name="api_state_canceled" translatable="false">Canceled</string>
+    <string name="api_videotype_trailer" translatable="false">Trailer</string>
+    <string name="api_videotype_teaser" translatable="false">Teaser</string>
+    <string name="api_videotype_clip" translatable="false">Clip</string>
+    <string name="api_videotype_featurette" translatable="false">Featurette</string>
 
     <!-- menu_main.xml -->
     <string name="menu_sort_title">Sort</string>
@@ -23,6 +28,7 @@
     <string name="rating">%1$.1f / 10</string>
     <string name="error">Could not load movie data.\nCheck for Internet connection and try again.\nYou can still access your favorite movies.</string>
     <string name="poster_content_description">Movie poster</string>
+    <string name="video_content_description">Movie trailer</string>
     <string name="erroricon_content_description">Error icon</string>
     <string name="no_overview_available">There\'s no movie overview available for your language.</string>
     <string name="state_rumored">Rumored</string>
@@ -32,6 +38,8 @@
     <string name="state_canceled">Canceled</string>
     <string name="marked_as_favorite">Marked as favorite!</string>
     <string name="unmarked_as_favorite">Movie removed from favorites</string>
+    <string name="see_videos">See trailers</string>
+    <string name="see_reviews">See reviews</string>
 
     <!-- activity_about.xml -->
     <string name="about_author">Created by Piotr Skiba</string>
