@@ -67,7 +67,6 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         public void onTaskComplete(VideoList result) {
             // load english videos, when not found in other language
             if(result.getMovies().length == 0 && forcedLanguage == null && getPhoneLanguage() != getString(R.string.default_language)){
-                Log.d("vidload", "forcing english");
                 forcedLanguage = getString(R.string.default_language);
                 new FetchMovieVideosTask(new FetchMovieVideosTaskCompleteListener()).execute(movieId, forcedLanguage);
             }

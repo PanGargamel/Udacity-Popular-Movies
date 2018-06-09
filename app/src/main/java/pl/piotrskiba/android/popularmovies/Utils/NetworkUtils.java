@@ -27,6 +27,7 @@ public class NetworkUtils {
     public final static String PATH_POPULAR = "popular";
     public final static String PATH_TOP_RATED = "top_rated";
     public final static String PATH_VIDEOS = "videos";
+    public final static String PATH_REVIEWS = "reviews";
 
     private final static String PARAM_APIKEY = "api_key";
     private final static String PARAM_LANGUAGE = "language";
@@ -99,17 +100,46 @@ public class NetworkUtils {
         Uri uri;
         if(forcedLanguage != null){
             uri = Uri.parse(BASE_URL).buildUpon()
-                .path(BASE_PATH  + id + "/" + PATH_VIDEOS)
-                .appendQueryParameter(PARAM_APIKEY, API_KEY)
-                .appendQueryParameter(PARAM_LANGUAGE, forcedLanguage)
-                .build();
+                    .path(BASE_PATH  + id + "/" + PATH_VIDEOS)
+                    .appendQueryParameter(PARAM_APIKEY, API_KEY)
+                    .appendQueryParameter(PARAM_LANGUAGE, forcedLanguage)
+                    .build();
         }
         else{
             uri = Uri.parse(BASE_URL).buildUpon()
-                .path(BASE_PATH  + id + "/" + PATH_VIDEOS)
-                .appendQueryParameter(PARAM_APIKEY, API_KEY)
-                .appendQueryParameter(PARAM_LANGUAGE, getPhoneLanguage())
-                .build();
+                    .path(BASE_PATH  + id + "/" + PATH_VIDEOS)
+                    .appendQueryParameter(PARAM_APIKEY, API_KEY)
+                    .appendQueryParameter(PARAM_LANGUAGE, getPhoneLanguage())
+                    .build();
+        }
+
+        URL builtUrl = null;
+        try{
+            builtUrl = new URL(uri.toString());
+        }
+        catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+
+        return builtUrl;
+    }
+
+    public static URL buildReviewsUrl(String id, String forcedLanguage){
+
+        Uri uri;
+        if(forcedLanguage != null){
+            uri = Uri.parse(BASE_URL).buildUpon()
+                    .path(BASE_PATH  + id + "/" + PATH_REVIEWS)
+                    .appendQueryParameter(PARAM_APIKEY, API_KEY)
+                    .appendQueryParameter(PARAM_LANGUAGE, forcedLanguage)
+                    .build();
+        }
+        else{
+            uri = Uri.parse(BASE_URL).buildUpon()
+                    .path(BASE_PATH  + id + "/" + PATH_REVIEWS)
+                    .appendQueryParameter(PARAM_APIKEY, API_KEY)
+                    .appendQueryParameter(PARAM_LANGUAGE, getPhoneLanguage())
+                    .build();
         }
 
         URL builtUrl = null;

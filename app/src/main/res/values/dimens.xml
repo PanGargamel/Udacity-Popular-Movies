@@ -39,4 +39,10 @@
     <dimen name="video_title_margin">8dp</dimen>
     <dimen name="video_thumbnail_height">195dp</dimen>
 
+    <!-- activity_reviews.xml -->
+    <dimen name="review_margin_top_bottom">10dp</dimen>
+    <dimen name="review_author_text_size">12sp</dimen>
+    <dimen name="review_author_margin">8dp</dimen>
+    <dimen name="review_content_margin">8dp</dimen>
+
 </resources>
