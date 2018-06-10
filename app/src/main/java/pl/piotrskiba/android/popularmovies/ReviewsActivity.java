@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import pl.piotrskiba.android.popularmovies.AsyncTasks.FetchMovieReviewsTask;
 import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
@@ -16,6 +19,9 @@ import static pl.piotrskiba.android.popularmovies.Utils.textUtils.getPhoneLangua
 public class ReviewsActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
+    ProgressBar mLoadingIndicator;
+    LinearLayout mErrorLayout;
+
     ReviewListAdapter mReviewListAdapter;
     LinearLayoutManager layoutManager;
 
@@ -29,6 +35,9 @@ public class ReviewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reviews);
 
         mRecyclerView = findViewById(R.id.rv_review_list);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mErrorLayout = findViewById(R.id.error_layout);
+
         mReviewListAdapter = new ReviewListAdapter();
         layoutManager = new LinearLayoutManager(this);
 
@@ -51,13 +60,30 @@ public class ReviewsActivity extends AppCompatActivity {
         @Override
         public void onTaskComplete(ReviewList result) {
             // load english reviews, when not found in other language
-            if(result.getReviews().length == 0 && forcedLanguage == null && !getPhoneLanguage().equals(getString(R.string.default_language))){
-                forcedLanguage = getString(R.string.default_language);
-                new FetchMovieReviewsTask(new FetchMovieReviewsTaskCompleteListener()).execute(movieId, forcedLanguage);
+            if(result != null) {
+                if (result.getReviews().length == 0 && forcedLanguage == null && !getPhoneLanguage().equals(getString(R.string.default_language))) {
+                    forcedLanguage = getString(R.string.default_language);
+                    new FetchMovieReviewsTask(new FetchMovieReviewsTaskCompleteListener()).execute(movieId, forcedLanguage);
+                } else {
+                    mReviewListAdapter.setData(result);
+                }
+                showDefaultLayout();
             }
-            else {
-                mReviewListAdapter.setData(result);
+            else{
+                showErrorLayout();
             }
         }
+    }
+
+    private void showDefaultLayout(){
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorLayout(){
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
     }
 }

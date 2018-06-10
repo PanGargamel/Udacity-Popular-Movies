@@ -26,7 +26,7 @@
 
     <!-- activity_detail.xml -->
     <string name="rating">%1$.1f / 10</string>
-    <string name="error">Could not load movie data.\nCheck for Internet connection and try again.\nYou can still access your favorite movies.</string>
+    <string name="error">Could not load data.\nCheck for Internet connection and try again.\nYou can still access your favorite movies.</string>
     <string name="poster_content_description">Movie poster</string>
     <string name="video_content_description">Movie trailer</string>
     <string name="erroricon_content_description">Error icon</string>

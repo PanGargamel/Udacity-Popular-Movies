@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,6 +9,37 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_review_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@drawable/ic_error_outline_red_80dp"
+            android:contentDescription="@string/erroricon_content_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/error_image_padding" />
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/error"
+            android:textSize="@dimen/error_text_size"
+            android:textColor="@color/text"
+            android:textAlignment="center"
+            android:paddingTop="@dimen/error_text_padding" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        android:layout_width="@dimen/progressbar_size"
+        android:layout_height="@dimen/progressbar_size"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

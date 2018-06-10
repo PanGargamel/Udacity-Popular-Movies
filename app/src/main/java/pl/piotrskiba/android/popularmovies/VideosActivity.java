@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import pl.piotrskiba.android.popularmovies.AsyncTasks.FetchMovieVideosTask;
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
@@ -19,6 +23,9 @@ import static pl.piotrskiba.android.popularmovies.Utils.textUtils.getPhoneLangua
 public class VideosActivity extends AppCompatActivity implements VideoListAdapter.VideoListAdapterOnClickHandler {
 
     RecyclerView mRecyclerView;
+    ProgressBar mLoadingIndicator;
+    LinearLayout mErrorLayout;
+
     VideoListAdapter mVideoListAdapter;
     LinearLayoutManager layoutManager;
 
@@ -32,6 +39,9 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         setContentView(R.layout.activity_videos);
 
         mRecyclerView = findViewById(R.id.rv_video_list);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mErrorLayout = findViewById(R.id.error_layout);
+
         mVideoListAdapter = new VideoListAdapter(this);
         layoutManager = new LinearLayoutManager(this);
 
@@ -66,13 +76,30 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         @Override
         public void onTaskComplete(VideoList result) {
             // load english videos, when not found in other language
-            if(result.getMovies().length == 0 && forcedLanguage == null && getPhoneLanguage() != getString(R.string.default_language)){
-                forcedLanguage = getString(R.string.default_language);
-                new FetchMovieVideosTask(new FetchMovieVideosTaskCompleteListener()).execute(movieId, forcedLanguage);
+            if(result != null) {
+                if (result.getMovies().length == 0 && forcedLanguage == null && getPhoneLanguage() != getString(R.string.default_language)) {
+                    forcedLanguage = getString(R.string.default_language);
+                    new FetchMovieVideosTask(new FetchMovieVideosTaskCompleteListener()).execute(movieId, forcedLanguage);
+                } else {
+                    mVideoListAdapter.setData(result);
+                }
+                showDefaultLayout();
             }
-            else {
-                mVideoListAdapter.setData(result);
+            else{
+                showErrorLayout();
             }
         }
+    }
+
+    private void showDefaultLayout(){
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorLayout(){
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
     }
 }
