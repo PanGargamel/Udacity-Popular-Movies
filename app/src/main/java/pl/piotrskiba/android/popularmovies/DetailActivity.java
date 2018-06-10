@@ -1,7 +1,10 @@
 package pl.piotrskiba.android.popularmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,15 +20,11 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
 import java.util.Locale;
 
-import pl.piotrskiba.android.popularmovies.AsyncTasks.CheckIfMovieIsFavoriteTask;
 import pl.piotrskiba.android.popularmovies.AsyncTasks.DeleteMovieTask;
-import pl.piotrskiba.android.popularmovies.AsyncTasks.FetchMovieDetailsTask;
 import pl.piotrskiba.android.popularmovies.AsyncTasks.InsertMovieTask;
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
-import pl.piotrskiba.android.popularmovies.database.AppDatabase;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
 import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
 import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
@@ -46,20 +45,17 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mMovieStatus;
 
     private DetailedMovie mMovie;
-    private MovieEntry mMovieEntry;
+    MovieEntry mMovieEntry;
 
-    private AppDatabase mDb;
-
-    private Boolean isFavorite = false;
+    Boolean isFavorite = false;
 
     Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
+        setContentView(R.layout.activity_detail);
 
         mDefaultLayout = findViewById(R.id.target_layout);
         mErrorLayout = findViewById(R.id.error_layout);
@@ -74,11 +70,24 @@ public class DetailActivity extends AppCompatActivity {
         mMovieLanguage = findViewById(R.id.tv_language);
         mMovieStatus = findViewById(R.id.tv_status);
 
-
         Intent parentIntent = getIntent();
-        if(parentIntent.hasExtra(Intent.EXTRA_UID)){
+        if(parentIntent.hasExtra(Intent.EXTRA_UID)) {
             String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
-            new CheckIfMovieIsFavoriteTask(this, new CheckIfMovieIsFavoriteTaskCompleteListener()).execute(Integer.valueOf(movieId));
+
+            DetailsViewModelFactory factory = new DetailsViewModelFactory(this, movieId);
+            DetailsViewModel viewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel.class);
+
+            viewModel.getMovie().observe(this, new Observer<DetailedMovie>() {
+                @Override
+                public void onChanged(@Nullable DetailedMovie detailedMovie) {
+                    if(detailedMovie != null) {
+                        populateUi(detailedMovie);
+                    }
+                    else{
+                        showErrorLayout();
+                    }
+                }
+            });
         }
     }
 
@@ -127,14 +136,6 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchMovieDetailsTaskCompleteListener implements AsyncTaskCompleteListener<DetailedMovie> {
-        @Override
-        public void onTaskComplete(DetailedMovie result) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            populateUi(result);
-        }
-    }
-
     public class InsertMovieTaskCompleteListener implements AsyncTaskCompleteListener<MovieEntry> {
         @Override
         public void onTaskComplete(MovieEntry result) {
@@ -154,145 +155,101 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    public class CheckIfMovieIsFavoriteTaskCompleteListener implements AsyncTaskCompleteListener<List<MovieEntry>> {
-
-        @Override
-        public void onTaskComplete(List<MovieEntry> moviesFromDb) {
-
-            if(moviesFromDb.size() > 0){
-                isFavorite = true;
-
-                // movie in db, load it
-                MovieEntry movie = moviesFromDb.get(0);
-                mMovieEntry = movie;
-
-                DetailedMovie detailedMovie = new DetailedMovie(movie.getMovieId(), movie.getOriginalLanguage(),
-                        movie.getOriginalTitle(), movie.getOverview(), movie.getPosterPath(), movie.getReleaseDate(),
-                        movie.getStatus(), movie.getTitle(), movie.getVoteAverage());
-                populateUi(detailedMovie);
-            }
-            else{
-                isFavorite = false;
-
-                // movie not in db, make an API call
-                Intent parentIntent = getIntent();
-                if(parentIntent.hasExtra(Intent.EXTRA_UID)){
-                    String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
-
-                    new FetchMovieDetailsTask(new FetchMovieDetailsTaskCompleteListener()).execute(movieId);
-                }
-            }
-        }
-    }
-
     private void populateUi(DetailedMovie movie){
         mMovie = movie;
 
-        if(movie != null) {
-            String imageUrl = NetworkUtils.buildImageUrl(movie.getPosterPath()).toString();
-            Picasso.get()
-                    .load(imageUrl)
-                    .error(R.drawable.ic_broken_image_white_80dp)
-                    .into(mMoviePoster);
+        String imageUrl = NetworkUtils.buildImageUrl(movie.getPosterPath()).toString();
+        Picasso.get()
+                .load(imageUrl)
+                .error(R.drawable.ic_broken_image_white_80dp)
+                .into(mMoviePoster);
 
-            mMovieTitle.setText(movie.getTitle());
-            if (!movie.getTitle().equals(movie.getOriginalTitle())) {
-                mMovieOriginalTitle.setText(movie.getOriginalTitle());
+        mMovieTitle.setText(movie.getTitle());
+        if (!movie.getTitle().equals(movie.getOriginalTitle())) {
+            mMovieOriginalTitle.setText(movie.getOriginalTitle());
+        } else {
+            if(mMovieOriginalTitle != null) { // wasn't it previously removed?
+                ViewGroup parent = (ViewGroup) mMovieOriginalTitle.getParent();
+                parent.removeView(mMovieOriginalTitle);
+                mMovieOriginalTitle = null;
+            }
+        }
+
+        if(movie.getOverview().equals(""))
+            mMovieDescription.setText(R.string.no_overview_available);
+        else
+            mMovieDescription.setText(movie.getOverview());
+
+        if(!movie.getReleaseDate().equals(""))
+            mMovieDate.setText(movie.getReleaseDate());
+        else{
+            if(mMovieDate != null) {
+                ViewGroup parent = (ViewGroup) mMovieDate.getParent();
+                parent.removeView(mMovieDate);
+                mMovieDate = null;
+            }
+        }
+
+        /*
+            Convert 2-letter language code to language
+            Inspiration: http://www.java2s.com/Code/Java/I18N/Getalistofcountrynames.htm
+        */
+        Locale[] locales = Locale.getAvailableLocales();
+        for (Locale locale : locales) {
+            String langCode = locale.getLanguage();
+            if (langCode.equals(movie.getOriginalLanguage())) {
+                mMovieLanguage.setText(locale.getDisplayLanguage());
+                break;
+            }
+        }
+        if(mMovieLanguage.getText().equals("")){
+            if(mMovieLanguage != null) {
+                ViewGroup parent = (ViewGroup) mMovieLanguage.getParent();
+                parent.removeView(mMovieLanguage);
+                mMovieLanguage = null;
+            }
+        }
+
+        String ratingText = getString(R.string.rating, movie.getVoteAverage());
+        mMovieRating.setText(ratingText);
+
+        if(movie.getVoteAverage() > 0) {
+            if (movie.getVoteAverage() < 4) {
+                mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_bad, 0, 0, 0);
+            } else if (movie.getVoteAverage() >= 7) {
+                mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_good, 0, 0, 0);
             } else {
-                if(mMovieOriginalTitle != null) { // wasn't it previously removed?
-                    ViewGroup parent = (ViewGroup) mMovieOriginalTitle.getParent();
-                    parent.removeView(mMovieOriginalTitle);
-                    mMovieOriginalTitle = null;
-                }
+                mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_neutral, 0, 0, 0);
             }
-
-            if(movie.getOverview().equals(""))
-                mMovieDescription.setText(R.string.no_overview_available);
-            else
-                mMovieDescription.setText(movie.getOverview());
-
-            if(!movie.getReleaseDate().equals(""))
-                mMovieDate.setText(movie.getReleaseDate());
-            else{
-                if(mMovieDate != null) {
-                    ViewGroup parent = (ViewGroup) mMovieDate.getParent();
-                    parent.removeView(mMovieDate);
-                    mMovieDate = null;
-                }
-            }
-
-            /*
-                Convert 2-letter language code to language
-                Inspiration: http://www.java2s.com/Code/Java/I18N/Getalistofcountrynames.htm
-            */
-            Locale[] locales = Locale.getAvailableLocales();
-            for (Locale locale : locales) {
-                String langCode = locale.getLanguage();
-                if (langCode.equals(movie.getOriginalLanguage())) {
-                    mMovieLanguage.setText(locale.getDisplayLanguage());
-                    break;
-                }
-            }
-            if(mMovieLanguage.getText().equals("")){
-                if(mMovieLanguage != null) {
-                    ViewGroup parent = (ViewGroup) mMovieLanguage.getParent();
-                    parent.removeView(mMovieLanguage);
-                    mMovieLanguage = null;
-                }
-            }
-
-            String ratingText = getString(R.string.rating, movie.getVoteAverage());
-            mMovieRating.setText(ratingText);
-
-            if(movie.getVoteAverage() > 0) {
-                if (movie.getVoteAverage() < 4) {
-                    mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_bad, 0, 0, 0);
-                } else if (movie.getVoteAverage() >= 7) {
-                    mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_good, 0, 0, 0);
-                } else {
-                    mMovieRating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_rating_neutral, 0, 0, 0);
-                }
-            }
-            else{
-                if(mMovieRating != null) {
-                    ViewGroup parent = (ViewGroup) mMovieRating.getParent();
-                    parent.removeView(mMovieRating);
-                    mMovieRating = null;
-                }
-            }
-
-            if(movie.getStatus().equals(getResources().getString(R.string.api_state_rumored)))
-                mMovieStatus.setText(R.string.state_rumored);
-            else if(movie.getStatus().equals(getResources().getString(R.string.api_state_planned)))
-                mMovieStatus.setText(R.string.state_planned);
-            else if(movie.getStatus().equals(getResources().getString(R.string.api_state_inproduction)))
-                mMovieStatus.setText(R.string.state_inproduction);
-            else if(movie.getStatus().equals(getResources().getString(R.string.api_state_postproduction)))
-                mMovieStatus.setText(R.string.state_postproduction);
-            else if(movie.getStatus().equals(getResources().getString(R.string.api_state_canceled)))
-                mMovieStatus.setText(R.string.state_canceled);
-            else{
-                // released
-                if(mMovieStatus != null){
-                    ViewGroup parent = (ViewGroup) mMovieStatus.getParent();
-                    parent.removeView(mMovieStatus);
-                    mMovieStatus = null;
-                }
-            }
-
-            showDefaultLayout();
         }
         else{
-            showErrorLayout();
-
-            // show movie details when the connection is back
-            Intent parentIntent = getIntent();
-            if(parentIntent.hasExtra(Intent.EXTRA_UID)){
-                String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
-
-                new FetchMovieDetailsTask(new FetchMovieDetailsTaskCompleteListener()).execute(movieId);
+            if(mMovieRating != null) {
+                ViewGroup parent = (ViewGroup) mMovieRating.getParent();
+                parent.removeView(mMovieRating);
+                mMovieRating = null;
             }
         }
+
+        if(movie.getStatus().equals(getResources().getString(R.string.api_state_rumored)))
+            mMovieStatus.setText(R.string.state_rumored);
+        else if(movie.getStatus().equals(getResources().getString(R.string.api_state_planned)))
+            mMovieStatus.setText(R.string.state_planned);
+        else if(movie.getStatus().equals(getResources().getString(R.string.api_state_inproduction)))
+            mMovieStatus.setText(R.string.state_inproduction);
+        else if(movie.getStatus().equals(getResources().getString(R.string.api_state_postproduction)))
+            mMovieStatus.setText(R.string.state_postproduction);
+        else if(movie.getStatus().equals(getResources().getString(R.string.api_state_canceled)))
+            mMovieStatus.setText(R.string.state_canceled);
+        else{
+            // released
+            if(mMovieStatus != null){
+                ViewGroup parent = (ViewGroup) mMovieStatus.getParent();
+                parent.removeView(mMovieStatus);
+                mMovieStatus = null;
+            }
+        }
+
+        showDefaultLayout();
     }
 
     private void showDefaultLayout(){
@@ -306,5 +263,4 @@ public class DetailActivity extends AppCompatActivity {
         mErrorLayout.setVisibility(View.VISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
     }
-
 }
