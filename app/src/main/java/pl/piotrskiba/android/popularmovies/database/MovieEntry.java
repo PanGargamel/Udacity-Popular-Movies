@@ -12,6 +12,7 @@ public class MovieEntry {
     @PrimaryKey(autoGenerate = true)
     private long id;
     private int movieId;
+    private String imdbId;
     private String originalLanguage;
     private String originalTitle;
     private String overview;
@@ -23,8 +24,9 @@ public class MovieEntry {
     private Date updatedAt;
 
     @Ignore
-    public MovieEntry(int movieId, String originalLanguage, String originalTitle, String overview, String posterPath, String releaseDate, String status, String title, double voteAverage, Date updatedAt){
+    public MovieEntry(int movieId, String imdbId, String originalLanguage, String originalTitle, String overview, String posterPath, String releaseDate, String status, String title, double voteAverage, Date updatedAt){
         this.movieId = movieId;
+        this.imdbId = imdbId;
         this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
         this.overview = overview;
@@ -36,9 +38,10 @@ public class MovieEntry {
         this.updatedAt = updatedAt;
     }
 
-    public MovieEntry(long id, int movieId, String originalLanguage, String originalTitle, String overview, String posterPath, String releaseDate, String status, String title, double voteAverage, Date updatedAt){
+    public MovieEntry(long id, int movieId, String imdbId, String originalLanguage, String originalTitle, String overview, String posterPath, String releaseDate, String status, String title, double voteAverage, Date updatedAt){
         this.id = id;
         this.movieId = movieId;
+        this.imdbId = imdbId;
         this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
         this.overview = overview;
@@ -53,6 +56,8 @@ public class MovieEntry {
     public long getId(){ return id; }
 
     public int getMovieId(){ return movieId; }
+
+    public String getImdbId() { return imdbId; }
 
     public String getOriginalLanguage() { return originalLanguage; }
 

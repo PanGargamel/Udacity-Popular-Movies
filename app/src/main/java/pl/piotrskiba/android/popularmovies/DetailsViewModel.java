@@ -41,7 +41,7 @@ public class DetailsViewModel extends ViewModel {
                 MovieEntry movieFromDb = moviesFromDb.get(0);
                 detailActivity.mMovieEntry = movieFromDb;
 
-                DetailedMovie detailedMovie = new DetailedMovie(movieFromDb.getMovieId(), movieFromDb.getOriginalLanguage(),
+                DetailedMovie detailedMovie = new DetailedMovie(movieFromDb.getMovieId(), movieFromDb.getImdbId(), movieFromDb.getOriginalLanguage(),
                         movieFromDb.getOriginalTitle(), movieFromDb.getOverview(), movieFromDb.getPosterPath(), movieFromDb.getReleaseDate(),
                         movieFromDb.getStatus(), movieFromDb.getTitle(), movieFromDb.getVoteAverage());
 

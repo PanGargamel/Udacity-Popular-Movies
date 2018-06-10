@@ -23,6 +23,7 @@
     <!-- menu_detailed.xml -->
     <string name="menu_favorite">Mark as favorite</string>
     <string name="menu_unfavorite">Unmark as favorite</string>
+    <string name="menu_share">Share</string>
 
     <!-- activity_detail.xml -->
     <string name="rating">%1$.1f / 10</string>
@@ -40,6 +41,7 @@
     <string name="unmarked_as_favorite">Movie removed from favorites</string>
     <string name="see_videos">See trailers</string>
     <string name="see_reviews">See reviews</string>
+    <string name="share_movie">Share this movie</string>
 
     <!-- activity_videos.xml -->
     <string name="no_videos_found">There\'s no video available for this movie.</string>

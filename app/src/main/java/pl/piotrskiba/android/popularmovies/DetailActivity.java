@@ -4,7 +4,9 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -49,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
 
     Boolean isFavorite = false;
     Boolean error = false;
+    Boolean imdbAvailable = true;
 
     Context context = this;
 
@@ -122,9 +125,16 @@ public class DetailActivity extends AppCompatActivity {
             menu.findItem(R.id.action_favorite).setVisible(true);
             menu.findItem(R.id.action_unfavorite).setVisible(false);
         }
+
         if(error){
             menu.findItem(R.id.action_favorite).setVisible(false);
             menu.findItem(R.id.action_unfavorite).setVisible(false);
+        }
+
+        if(mMovie != null) {
+            if (mMovie.getImdbId() == null) {
+                menu.findItem(R.id.action_share).setVisible(false);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -137,6 +147,20 @@ public class DetailActivity extends AppCompatActivity {
         }
         else if(item.getItemId() == R.id.action_unfavorite){
             new DeleteMovieTask(this, new DeleteMovieTaskCompleteListener()).execute(mMovieEntry);
+        }
+        else if(item.getItemId() == R.id.action_share){
+            String url = NetworkUtils.buildImdbUrl(mMovie.getImdbId()).toString();
+            String title = getString(R.string.share_movie);
+            String mimeType = "text/plain";
+
+            Intent intent = ShareCompat.IntentBuilder.from(this)
+                    .setChooserTitle(title)
+                    .setType(mimeType)
+                    .setText(url)
+                    .getIntent();
+
+            if (intent.resolveActivity(getPackageManager()) != null)
+                startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

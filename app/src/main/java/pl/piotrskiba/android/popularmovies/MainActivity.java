@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
     private boolean isLoading = false;
 
-    private AppDatabase mDb;
     private MovieList mFavoriteMovies;
 
     @Override
@@ -73,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         mMovieListAdapter.clearData();
         FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
         new FetchMoviesTask().execute(params);
-
-        mDb = AppDatabase.getInstance(getApplicationContext());
 
         setupViewModel();
     }

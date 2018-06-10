@@ -42,6 +42,9 @@ public class NetworkUtils {
     private final static String BASE_YOUTUBE_PATH = "/watch";
     private final static String PARAM_YOUTUBE_VIDEO = "v";
 
+    private final static String BASE_IMDB_URL = "https://www.imdb.com/";
+    private final static String BASE_IMDB_PATH = "/title/";
+
     public static URL buildUrl(String path, int page){
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .path(BASE_PATH + path)
@@ -173,6 +176,22 @@ public class NetworkUtils {
         Uri uri = Uri.parse(BASE_YOUTUBE_URL).buildUpon()
                 .path(BASE_YOUTUBE_PATH)
                 .appendQueryParameter(PARAM_YOUTUBE_VIDEO, movieId)
+                .build();
+
+        URL builtUrl = null;
+        try{
+            builtUrl = new URL(uri.toString());
+        }
+        catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+
+        return builtUrl;
+    }
+
+    public static URL buildImdbUrl(String imdbId){
+        Uri uri = Uri.parse(BASE_IMDB_URL).buildUpon()
+                .path(BASE_IMDB_PATH + imdbId)
                 .build();
 
         URL builtUrl = null;

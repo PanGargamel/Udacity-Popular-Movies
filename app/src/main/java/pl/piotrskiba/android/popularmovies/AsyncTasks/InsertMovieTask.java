@@ -26,7 +26,7 @@ public class InsertMovieTask extends AsyncTask<DetailedMovie, Void, MovieEntry>{
         DetailedMovie movie = detailedMovies[0];
 
         Date date = new Date();
-        MovieEntry movieEntry = new MovieEntry(movie.getId(), movie.getOriginalLanguage(),
+        MovieEntry movieEntry = new MovieEntry(movie.getId(), movie.getImdbId(), movie.getOriginalLanguage(),
                 movie.getOriginalTitle(), movie.getOverview(), movie.getPosterPath(),
                 movie.getReleaseDate(), movie.getStatus(), movie.getTitle(),
                 movie.getVoteAverage(), date);
@@ -34,7 +34,7 @@ public class InsertMovieTask extends AsyncTask<DetailedMovie, Void, MovieEntry>{
         AppDatabase db = AppDatabase.getInstance(context.getApplicationContext());
         long id = db.movieDao().insertMovie(movieEntry);
 
-        return new MovieEntry(id, movie.getId(), movie.getOriginalLanguage(),
+        return new MovieEntry(id, movie.getId(), movie.getImdbId(), movie.getOriginalLanguage(),
                 movie.getOriginalTitle(), movie.getOverview(), movie.getPosterPath(),
                 movie.getReleaseDate(), movie.getStatus(), movie.getTitle(),
                 movie.getVoteAverage(), date);
