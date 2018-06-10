@@ -1,7 +1,7 @@
 package pl.piotrskiba.android.popularmovies;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mErrorLayout = findViewById(R.id.error_layout);
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
         mDb = AppDatabase.getInstance(getApplicationContext());
 
-        loadFavoriteMovies();
+        setupViewModel();
     }
 
 
@@ -188,13 +188,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadFavoriteMovies(){
-        Log.d("debb", "actively retrieving data");
-        LiveData<List<MovieEntry>> favoriteMovies = mDb.movieDao().loadAllMovies();
-        favoriteMovies.observe(this, new Observer<List<MovieEntry>>() {
+    private void setupViewModel(){
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<MovieEntry>>() {
             @Override
             public void onChanged(@Nullable List<MovieEntry> movieEntries) {
-                Log.d("debb", "retrieving data because of change");
                 Movie[] simpleFavoriteMovies = new Movie[movieEntries.size()];
 
                 for(int i = 0; i < movieEntries.size(); i++){
