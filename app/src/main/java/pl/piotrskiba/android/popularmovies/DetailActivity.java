@@ -48,6 +48,7 @@ public class DetailActivity extends AppCompatActivity {
     MovieEntry mMovieEntry;
 
     Boolean isFavorite = false;
+    Boolean error = false;
 
     Context context = this;
 
@@ -119,6 +120,10 @@ public class DetailActivity extends AppCompatActivity {
         }
         else{
             menu.findItem(R.id.action_favorite).setVisible(true);
+            menu.findItem(R.id.action_unfavorite).setVisible(false);
+        }
+        if(error){
+            menu.findItem(R.id.action_favorite).setVisible(false);
             menu.findItem(R.id.action_unfavorite).setVisible(false);
         }
 
@@ -256,11 +261,14 @@ public class DetailActivity extends AppCompatActivity {
         mDefaultLayout.setVisibility(View.VISIBLE);
         mErrorLayout.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+        error = false;
     }
 
     private void showErrorLayout(){
         mDefaultLayout.setVisibility(View.INVISIBLE);
         mErrorLayout.setVisibility(View.VISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+        error = true;
+        invalidateOptionsMenu();
     }
 }
