@@ -41,6 +41,10 @@
     <string name="see_videos">See trailers</string>
     <string name="see_reviews">See reviews</string>
 
+    <!-- activity_videos.xml -->
+    <string name="no_videos_found">There\'s no video available for this movie.</string>
+    <string name="no_reviews_found">There\'s no review available for this movie.</string>
+
     <!-- activity_about.xml -->
     <string name="about_author">Created by Piotr Skiba</string>
     <string name="about_webpage" translatable="false">http://piotrskiba.pl/</string>

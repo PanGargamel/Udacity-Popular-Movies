@@ -27,6 +27,10 @@
     <string name="see_videos">Zobacz zwiastuny</string>
     <string name="see_reviews">Zobacz recenzje</string>
 
+    <!-- activity_videos.xml -->
+    <string name="no_videos_found">Ten film nie posiada żadnych zwiastunów.</string>
+    <string name="no_reviews_found">Ten film nie posiada żadnych recenzji.</string>
+
     <!-- activity_about.xml -->
     <string name="about_author">Autor: Piotr Skiba</string>
     <string name="about_udacity_contribution">Ten projekt został stworzony na potrzeby kursu Udacity Google Developer Nanodegree.</string>

@@ -6,11 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import pl.piotrskiba.android.popularmovies.AsyncTasks.FetchMovieVideosTask;
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
@@ -25,6 +24,7 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
     RecyclerView mRecyclerView;
     ProgressBar mLoadingIndicator;
     LinearLayout mErrorLayout;
+    TextView mNoDataTextView;
 
     VideoListAdapter mVideoListAdapter;
     LinearLayoutManager layoutManager;
@@ -41,6 +41,7 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         mRecyclerView = findViewById(R.id.rv_video_list);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mErrorLayout = findViewById(R.id.error_layout);
+        mNoDataTextView = findViewById(R.id.tv_no_data);
 
         mVideoListAdapter = new VideoListAdapter(this);
         layoutManager = new LinearLayoutManager(this);
@@ -81,9 +82,14 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
                     forcedLanguage = getString(R.string.default_language);
                     new FetchMovieVideosTask(new FetchMovieVideosTaskCompleteListener()).execute(movieId, forcedLanguage);
                 } else {
-                    mVideoListAdapter.setData(result);
+                    if(result.getMovies().length == 0){
+                        showNoDataLayout();
+                    }
+                    else {
+                        mVideoListAdapter.setData(result);
+                        showDefaultLayout();
+                    }
                 }
-                showDefaultLayout();
             }
             else{
                 showErrorLayout();
@@ -95,11 +101,20 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorLayout.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        mNoDataTextView.setVisibility(View.INVISIBLE);
     }
 
     private void showErrorLayout(){
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
+        mNoDataTextView.setVisibility(View.INVISIBLE);
+    }
+
+    private void showNoDataLayout(){
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mNoDataTextView.setVisibility(View.VISIBLE);
     }
 }

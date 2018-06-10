@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import pl.piotrskiba.android.popularmovies.AsyncTasks.FetchMovieReviewsTask;
 import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
@@ -21,6 +22,7 @@ public class ReviewsActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     ProgressBar mLoadingIndicator;
     LinearLayout mErrorLayout;
+    TextView mNoDataTextView;
 
     ReviewListAdapter mReviewListAdapter;
     LinearLayoutManager layoutManager;
@@ -37,6 +39,7 @@ public class ReviewsActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.rv_review_list);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mErrorLayout = findViewById(R.id.error_layout);
+        mNoDataTextView = findViewById(R.id.tv_no_data);
 
         mReviewListAdapter = new ReviewListAdapter();
         layoutManager = new LinearLayoutManager(this);
@@ -65,9 +68,14 @@ public class ReviewsActivity extends AppCompatActivity {
                     forcedLanguage = getString(R.string.default_language);
                     new FetchMovieReviewsTask(new FetchMovieReviewsTaskCompleteListener()).execute(movieId, forcedLanguage);
                 } else {
-                    mReviewListAdapter.setData(result);
+                    if(result.getReviews().length == 0){
+                        showNoDataLayout();
+                    }
+                    else {
+                        mReviewListAdapter.setData(result);
+                        showDefaultLayout();
+                    }
                 }
-                showDefaultLayout();
             }
             else{
                 showErrorLayout();
@@ -79,11 +87,20 @@ public class ReviewsActivity extends AppCompatActivity {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorLayout.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        mNoDataTextView.setVisibility(View.INVISIBLE);
     }
 
     private void showErrorLayout(){
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
+        mNoDataTextView.setVisibility(View.INVISIBLE);
+    }
+
+    private void showNoDataLayout(){
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mNoDataTextView.setVisibility(View.VISIBLE);
     }
 }
