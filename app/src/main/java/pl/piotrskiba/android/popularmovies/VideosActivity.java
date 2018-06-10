@@ -21,17 +21,16 @@ import static pl.piotrskiba.android.popularmovies.Utils.textUtils.getPhoneLangua
 
 public class VideosActivity extends AppCompatActivity implements VideoListAdapter.VideoListAdapterOnClickHandler {
 
-    RecyclerView mRecyclerView;
-    ProgressBar mLoadingIndicator;
-    LinearLayout mErrorLayout;
-    TextView mNoDataTextView;
+    private RecyclerView mRecyclerView;
+    private ProgressBar mLoadingIndicator;
+    private LinearLayout mErrorLayout;
+    private TextView mNoDataTextView;
 
-    VideoListAdapter mVideoListAdapter;
-    LinearLayoutManager layoutManager;
+    private VideoListAdapter mVideoListAdapter;
 
     private String forcedLanguage = null;
 
-    String movieId;
+    private String movieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         mNoDataTextView = findViewById(R.id.tv_no_data);
 
         mVideoListAdapter = new VideoListAdapter(this);
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         mRecyclerView.setAdapter(mVideoListAdapter);
         mRecyclerView.setHasFixedSize(true);
@@ -52,8 +51,7 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
 
         Intent parentIntent = getIntent();
         if(parentIntent.hasExtra(Intent.EXTRA_UID)){
-            String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
-            this.movieId = movieId;
+            this.movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
             loadMovieVideos();
         }
     }
@@ -78,7 +76,7 @@ public class VideosActivity extends AppCompatActivity implements VideoListAdapte
         public void onTaskComplete(VideoList result) {
             // load english videos, when not found in other language
             if(result != null) {
-                if (result.getMovies().length == 0 && forcedLanguage == null && getPhoneLanguage() != getString(R.string.default_language)) {
+                if (result.getMovies().length == 0 && forcedLanguage == null && !getPhoneLanguage().equals(getString(R.string.default_language))) {
                     forcedLanguage = getString(R.string.default_language);
                     new FetchMovieVideosTask(new FetchMovieVideosTaskCompleteListener()).execute(movieId, forcedLanguage);
                 } else {

@@ -3,7 +3,6 @@ package pl.piotrskiba.android.popularmovies;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import pl.piotrskiba.android.popularmovies.models.Video;
 import pl.piotrskiba.android.popularmovies.models.VideoList;
 
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoViewHolder> {
-    VideoList mVideoList;
+    private VideoList mVideoList;
 
     private final VideoListAdapterOnClickHandler clickHandler;
 
@@ -62,10 +61,10 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
 
     class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView mVideoTitle;
-        ImageView mVideoThumbnail;
+        final TextView mVideoTitle;
+        final ImageView mVideoThumbnail;
 
-        public VideoViewHolder(View itemView) {
+        VideoViewHolder(View itemView) {
             super(itemView);
 
             mVideoTitle = itemView.findViewById(R.id.tv_video_title);

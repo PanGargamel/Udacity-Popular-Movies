@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="pl.piotrskiba.android.popularmovies.AboutActivity"
-    android:background="@color/background">
+    tools:context="pl.piotrskiba.android.popularmovies.AboutActivity">
 
     <TextView
         android:layout_width="match_parent"

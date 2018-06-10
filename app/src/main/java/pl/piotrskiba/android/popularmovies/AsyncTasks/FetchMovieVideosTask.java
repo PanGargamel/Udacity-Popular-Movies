@@ -1,7 +1,6 @@
 package pl.piotrskiba.android.popularmovies.AsyncTasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,13 +9,11 @@ import java.net.URL;
 
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
 import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
-import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
-import pl.piotrskiba.android.popularmovies.models.MovieList;
 import pl.piotrskiba.android.popularmovies.models.VideoList;
 
 public class FetchMovieVideosTask extends AsyncTask<String, Void, VideoList> {
 
-    private AsyncTaskCompleteListener<VideoList> listener;
+    private final AsyncTaskCompleteListener<VideoList> listener;
 
     public FetchMovieVideosTask(AsyncTaskCompleteListener<VideoList> listener){
         this.listener = listener;

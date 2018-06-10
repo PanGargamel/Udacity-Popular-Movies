@@ -11,8 +11,8 @@ import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
 
 public class CheckIfMovieIsFavoriteTask extends AsyncTask<Integer, Void, List<MovieEntry>>{
 
-    private Context context;
-    private AsyncTaskCompleteListener<List<MovieEntry>> listener;
+    private final Context context;
+    private final AsyncTaskCompleteListener<List<MovieEntry>> listener;
 
     public CheckIfMovieIsFavoriteTask(Context context, AsyncTaskCompleteListener<List<MovieEntry>> listener){
         this.context = context;

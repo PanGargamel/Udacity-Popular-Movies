@@ -11,17 +11,17 @@ public class MovieEntry {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
-    private int movieId;
-    private String imdbId;
-    private String originalLanguage;
-    private String originalTitle;
-    private String overview;
-    private String posterPath;
-    private String releaseDate;
-    private String status;
-    private String title;
-    private double voteAverage;
-    private Date updatedAt;
+    private final int movieId;
+    private final String imdbId;
+    private final String originalLanguage;
+    private final String originalTitle;
+    private final String overview;
+    private final String posterPath;
+    private final String releaseDate;
+    private final String status;
+    private final String title;
+    private final double voteAverage;
+    private final Date updatedAt;
 
     @Ignore
     public MovieEntry(int movieId, String imdbId, String originalLanguage, String originalTitle, String overview, String posterPath, String releaseDate, String status, String title, double voteAverage, Date updatedAt){

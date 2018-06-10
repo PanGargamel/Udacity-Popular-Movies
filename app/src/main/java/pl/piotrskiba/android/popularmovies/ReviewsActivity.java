@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,15 +18,14 @@ import static pl.piotrskiba.android.popularmovies.Utils.textUtils.getPhoneLangua
 
 public class ReviewsActivity extends AppCompatActivity {
 
-    RecyclerView mRecyclerView;
-    ProgressBar mLoadingIndicator;
-    LinearLayout mErrorLayout;
-    TextView mNoDataTextView;
+    private RecyclerView mRecyclerView;
+    private ProgressBar mLoadingIndicator;
+    private LinearLayout mErrorLayout;
+    private TextView mNoDataTextView;
 
-    ReviewListAdapter mReviewListAdapter;
-    LinearLayoutManager layoutManager;
+    private ReviewListAdapter mReviewListAdapter;
 
-    String movieId;
+    private String movieId;
 
     private String forcedLanguage = null;
 
@@ -42,15 +40,14 @@ public class ReviewsActivity extends AppCompatActivity {
         mNoDataTextView = findViewById(R.id.tv_no_data);
 
         mReviewListAdapter = new ReviewListAdapter();
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         mRecyclerView.setAdapter(mReviewListAdapter);
         mRecyclerView.setLayoutManager(layoutManager);
 
         Intent parentIntent = getIntent();
         if(parentIntent.hasExtra(Intent.EXTRA_UID)){
-            String movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
-            this.movieId = movieId;
+            this.movieId = parentIntent.getStringExtra(Intent.EXTRA_UID);
             loadMovieReviews();
         }
     }

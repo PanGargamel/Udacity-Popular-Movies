@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="@color/backgroundLight"
     android:layout_marginTop="@dimen/review_margin_top_bottom"
     android:layout_marginBottom="@dimen/review_margin_top_bottom">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_review_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_review_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/review_content_margin"
-            android:layout_marginBottom="@dimen/review_content_margin"
-            android:layout_marginLeft="@dimen/review_content_margin"
-            android:layout_marginRight="@dimen/review_content_margin"
-            android:textColor="@color/text"/>
-        <TextView
-            android:id="@+id/tv_review_author"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/review_author_text_size"
-            android:textAlignment="textEnd"
-            android:layout_marginTop="@dimen/review_author_margin"
-            android:layout_marginBottom="@dimen/review_author_margin"
-            android:layout_marginLeft="@dimen/review_author_margin"
-            android:layout_marginRight="@dimen/review_author_margin"
-            android:textColor="@color/text"
-            android:gravity="end" />
-    </LinearLayout>
-</FrameLayout>
+        android:layout_marginTop="@dimen/review_content_margin"
+        android:layout_marginBottom="@dimen/review_content_margin"
+        android:layout_marginLeft="@dimen/review_content_margin"
+        android:layout_marginRight="@dimen/review_content_margin"
+        android:textColor="@color/text"/>
+    <TextView
+        android:id="@+id/tv_review_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/review_author_text_size"
+        android:textAlignment="textEnd"
+        android:layout_marginTop="@dimen/review_author_margin"
+        android:layout_marginBottom="@dimen/review_author_margin"
+        android:layout_marginLeft="@dimen/review_author_margin"
+        android:layout_marginRight="@dimen/review_author_margin"
+        android:textColor="@color/text"
+        android:gravity="end" />
+</LinearLayout>

@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-public class DetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+class DetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final String mMovieId;
     private final DetailActivity mDetailActivity;

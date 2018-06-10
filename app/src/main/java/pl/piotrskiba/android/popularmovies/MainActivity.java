@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.List;
 
 import pl.piotrskiba.android.popularmovies.Utils.NetworkUtils;
-import pl.piotrskiba.android.popularmovies.database.AppDatabase;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
 import pl.piotrskiba.android.popularmovies.models.Movie;
 import pl.piotrskiba.android.popularmovies.models.MovieList;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
 
-    public class FetchMoviesTask extends AsyncTask<FetchMoviesTaskParams, Void, MovieList>{
+    class FetchMoviesTask extends AsyncTask<FetchMoviesTaskParams, Void, MovieList>{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

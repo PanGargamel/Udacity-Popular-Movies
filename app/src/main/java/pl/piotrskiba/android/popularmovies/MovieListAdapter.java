@@ -34,10 +34,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     public class MovieListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public final TextView mMovieTitle;
-        public final ImageView mMoviePoster;
+        final TextView mMovieTitle;
+        final ImageView mMoviePoster;
 
-        public MovieListAdapterViewHolder(View view){
+        MovieListAdapterViewHolder(View view){
             super(view);
             mMovieTitle = view.findViewById(R.id.tv_title);
             mMoviePoster = view.findViewById(R.id.iv_poster);

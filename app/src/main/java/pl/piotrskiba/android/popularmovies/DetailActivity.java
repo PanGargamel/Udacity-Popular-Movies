@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -50,10 +49,9 @@ public class DetailActivity extends AppCompatActivity {
     MovieEntry mMovieEntry;
 
     Boolean isFavorite = false;
-    Boolean error = false;
-    Boolean imdbAvailable = true;
+    private Boolean error = false;
 
-    Context context = this;
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +93,13 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    void onVideosButtonClick(View view){
+    public void onVideosButtonClick(View view){
         Intent intent = new Intent(this, VideosActivity.class);
         intent.putExtra(Intent.EXTRA_UID, String.valueOf(mMovie.getId()));
         startActivity(intent);
     }
 
-    void onReviewsButtonClick(View view){
+    public void onReviewsButtonClick(View view){
         Intent intent = new Intent(this, ReviewsActivity.class);
         intent.putExtra(Intent.EXTRA_UID, String.valueOf(mMovie.getId()));
         startActivity(intent);

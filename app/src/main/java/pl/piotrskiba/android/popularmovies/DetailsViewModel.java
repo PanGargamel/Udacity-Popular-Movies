@@ -14,9 +14,9 @@ import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
 
 public class DetailsViewModel extends ViewModel {
 
-    private MutableLiveData<DetailedMovie> movie = new MutableLiveData<>();
-    private DetailActivity detailActivity;
-    private String movieId;
+    private final MutableLiveData<DetailedMovie> movie = new MutableLiveData<>();
+    private final DetailActivity detailActivity;
+    private final String movieId;
 
     public DetailsViewModel(DetailActivity detailActivity, String movieId){
         this.detailActivity = detailActivity;

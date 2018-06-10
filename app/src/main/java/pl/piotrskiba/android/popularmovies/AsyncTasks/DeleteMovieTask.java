@@ -3,17 +3,14 @@ package pl.piotrskiba.android.popularmovies.AsyncTasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import java.util.Date;
-
 import pl.piotrskiba.android.popularmovies.database.AppDatabase;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
 import pl.piotrskiba.android.popularmovies.interfaces.AsyncTaskCompleteListener;
-import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
 
 public class DeleteMovieTask extends AsyncTask<MovieEntry, Void, Void>{
 
-    private Context context;
-    private AsyncTaskCompleteListener<Void> listener;
+    private final Context context;
+    private final AsyncTaskCompleteListener<Void> listener;
 
     public DeleteMovieTask(Context context, AsyncTaskCompleteListener<Void> listener){
         this.context = context;

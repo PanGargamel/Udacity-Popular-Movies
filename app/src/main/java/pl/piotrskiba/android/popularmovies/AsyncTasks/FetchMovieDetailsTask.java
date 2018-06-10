@@ -1,6 +1,5 @@
 package pl.piotrskiba.android.popularmovies.AsyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
@@ -14,7 +13,7 @@ import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
 
 public class FetchMovieDetailsTask extends AsyncTask<String, Void, DetailedMovie> {
 
-    private AsyncTaskCompleteListener<DetailedMovie> listener;
+    private final AsyncTaskCompleteListener<DetailedMovie> listener;
 
     public FetchMovieDetailsTask(AsyncTaskCompleteListener<DetailedMovie> listener){
         this.listener = listener;

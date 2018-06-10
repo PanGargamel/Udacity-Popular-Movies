@@ -4,16 +4,15 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
 import pl.piotrskiba.android.popularmovies.database.AppDatabase;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
 
-public class MainViewModel extends AndroidViewModel {
+class MainViewModel extends AndroidViewModel {
 
-    private LiveData<List<MovieEntry>> favoriteMovies;
+    private final LiveData<List<MovieEntry>> favoriteMovies;
 
     public MainViewModel(@NonNull Application application) {
         super(application);

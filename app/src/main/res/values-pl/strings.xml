@@ -15,7 +15,6 @@
     <string name="rating">%1$.1f / 10</string>
     <string name="error">Wystąpił błąd przy pobieraniu danych.\nSprawdź czy masz połączenie z Internetem oraz spróbuj ponownie.\nMożesz nadal przeglądać swoje ulubione filmy.</string>
     <string name="poster_content_description">Plakat filmu</string>
-    <string name="video_content_description">Zwiastun filmu</string>
     <string name="erroricon_content_description">Ikona błędu</string>
     <string name="no_overview_available">Ten film nie posiada opisu dla twojego języka.</string>
     <string name="state_rumored">Prawdopodobne</string>

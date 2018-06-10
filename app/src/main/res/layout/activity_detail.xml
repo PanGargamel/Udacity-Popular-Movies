@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.piotrskiba.android.popularmovies.DetailActivity"
-    android:background="@color/background">
+    tools:context="pl.piotrskiba.android.popularmovies.DetailActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -115,7 +114,7 @@
                 android:drawableStart="@drawable/ic_play_arrow_white_24dp"
                 android:drawableLeft="@drawable/ic_play_arrow_white_24dp"
                 android:paddingStart="@dimen/button_padding"
-                android:paddingLeft="@dimen/button_padding"
+                android:paddingEnd="@dimen/button_padding"
                 android:layout_marginTop="@dimen/button_marginTop"
                 android:textColor="@color/text"
                 android:onClick="onVideosButtonClick"
@@ -129,7 +128,7 @@
                 android:drawableStart="@drawable/ic_rate_review_white_24dp"
                 android:drawableLeft="@drawable/ic_rate_review_white_24dp"
                 android:paddingStart="@dimen/button_padding"
-                android:paddingLeft="@dimen/button_padding"
+                android:paddingEnd="@dimen/button_padding"
                 android:layout_marginTop="@dimen/button_marginTop"
                 android:textColor="@color/text"
                 android:onClick="onReviewsButtonClick"

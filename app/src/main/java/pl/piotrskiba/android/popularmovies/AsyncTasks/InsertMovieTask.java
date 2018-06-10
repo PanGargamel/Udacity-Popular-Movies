@@ -12,8 +12,8 @@ import pl.piotrskiba.android.popularmovies.models.DetailedMovie;
 
 public class InsertMovieTask extends AsyncTask<DetailedMovie, Void, MovieEntry>{
 
-    private Context context;
-    private AsyncTaskCompleteListener<MovieEntry> listener;
+    private final Context context;
+    private final AsyncTaskCompleteListener<MovieEntry> listener;
 
     public InsertMovieTask(Context context, AsyncTaskCompleteListener<MovieEntry> listener){
         this.context = context;

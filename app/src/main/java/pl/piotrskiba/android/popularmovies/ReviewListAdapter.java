@@ -13,7 +13,7 @@ import pl.piotrskiba.android.popularmovies.models.ReviewList;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolder> {
 
-    ReviewList mReviewList;
+    private ReviewList mReviewList;
 
     @NonNull
     @Override
@@ -43,10 +43,10 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
 
-        TextView mReviewAuthor;
-        TextView mReviewContent;
+        final TextView mReviewAuthor;
+        final TextView mReviewContent;
 
-        public ReviewViewHolder(View itemView) {
+        ReviewViewHolder(View itemView) {
             super(itemView);
 
             mReviewAuthor = itemView.findViewById(R.id.tv_review_author);
