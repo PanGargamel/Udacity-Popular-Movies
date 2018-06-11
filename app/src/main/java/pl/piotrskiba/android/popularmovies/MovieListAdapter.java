@@ -2,6 +2,7 @@ package pl.piotrskiba.android.popularmovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,8 @@ import pl.piotrskiba.android.popularmovies.models.MovieList;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieListAdapterViewHolder> {
     List<Movie> mMovies;
-    public int loadedPages = 0;
+    public int loadedPagesPopular = 0;
+    public int loadedPagesTopRated = 0;
 
     private final MovieListAdapterOnClickHandler clickHandler;
 
@@ -86,16 +88,20 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     public void clearData(){
         mMovies = new ArrayList<>();
-        loadedPages = 0;
         notifyDataSetChanged();
     }
 
-    public void appendData(MovieList movies){
-        List<Movie> newMovies = Arrays.asList(movies.getMovies());
-        mMovies.addAll(newMovies);
+    public void appendData(MovieList movies, String sorting){
+        if(movies != null) {
+            List<Movie> newMovies = Arrays.asList(movies.getMovies());
+            mMovies.addAll(newMovies);
 
-        loadedPages += 1;
-        notifyDataSetChanged();
+            if(sorting.equals(NetworkUtils.PATH_POPULAR))
+                loadedPagesPopular += 1;
+            else if(sorting.equals(NetworkUtils.PATH_TOP_RATED))
+                loadedPagesTopRated += 1;
+
+            notifyDataSetChanged();
+        }
     }
-
 }

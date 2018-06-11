@@ -4,12 +4,14 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Network;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private boolean isLoading = false;
 
     private MovieList mFavoriteMovies;
+    private MovieList mTopRatedMovies;
+    private MovieList mPopularMovies;
+
+    private final static String SCROLL_POSITION_KEY = "scrollposition";
+
+    MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +76,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setOnScrollListener(onScrollListener);
 
-        mMovieListAdapter.clearData();
-        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-        new FetchMoviesTask().execute(params);
-
         setupViewModel();
+
+        mMovieListAdapter.clearData();
+        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesPopular + 1);
+        new FetchMoviesTask().execute(params);
     }
 
 
@@ -109,7 +117,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             isLoading = false;
 
             if(movies != null) {
-                mMovieListAdapter.appendData(movies);
+                if(currentSorting.equals(NetworkUtils.PATH_POPULAR)) {
+                    viewModel.appendPopularMovies(movies);
+                }
+                else if(currentSorting.equals(NetworkUtils.PATH_TOP_RATED)) {
+                    viewModel.appendTopRatedMovies(movies);
+                }
                 showDefaultLayout();
             }
             else{
@@ -117,8 +130,16 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 if(mMovieListAdapter.mMovies.size() == 0){
                     showErrorLayout();
                     // show movie list when the connection is back
-                    FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-                    new FetchMoviesTask().execute(params);
+
+                    if(currentSorting.equals(NetworkUtils.PATH_POPULAR)) {
+                        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesPopular + 1);
+                        new FetchMoviesTask().execute(params);
+                    }
+                    else if(currentSorting.equals(NetworkUtils.PATH_TOP_RATED)) {
+                        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesTopRated + 1);
+                        new FetchMoviesTask().execute(params);
+                    }
+
                 }
                 else{
                     showDefaultLayout();
@@ -151,8 +172,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 currentSorting = NetworkUtils.PATH_POPULAR;
 
                 mMovieListAdapter.clearData();
-                FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-                new FetchMoviesTask().execute(params);
+                mMovieListAdapter.appendData(mPopularMovies, NetworkUtils.PATH_POPULAR);
+                layoutManager.scrollToPosition(0);
             }
             return true;
         }
@@ -160,9 +181,16 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             if(currentSorting != NetworkUtils.PATH_TOP_RATED) {
                 currentSorting = NetworkUtils.PATH_TOP_RATED;
 
-                mMovieListAdapter.clearData();
-                FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-                new FetchMoviesTask().execute(params);
+                // if there's no movie saved (first code execution), make an API call. In other case, just show it - other movies will load while scrolling
+                if(mTopRatedMovies == null){
+                    FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesTopRated + 1);
+                    new FetchMoviesTask().execute(params);
+                }
+                else {
+                    mMovieListAdapter.clearData();
+                    mMovieListAdapter.appendData(mTopRatedMovies, NetworkUtils.PATH_TOP_RATED);
+                }
+                layoutManager.scrollToPosition(0);
             }
             return true;
         }
@@ -170,8 +198,15 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             if(currentSorting != SORTING_FAVORITES) {
                 currentSorting = SORTING_FAVORITES;
 
-                mMovieListAdapter.clearData();
-                mMovieListAdapter.appendData(mFavoriteMovies);
+                if(mFavoriteMovies == null){
+                    mMovieListAdapter.clearData();
+                    mMovieListAdapter.appendData(mFavoriteMovies, SORTING_FAVORITES);
+                }
+                else {
+                    mMovieListAdapter.clearData();
+                    mMovieListAdapter.appendData(mFavoriteMovies, SORTING_FAVORITES);
+                }
+                layoutManager.scrollToPosition(0);
             }
             return true;
         }
@@ -185,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
     private void setupViewModel(){
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         viewModel.getFavoriteMovies().observe(this, new Observer<List<MovieEntry>>() {
             @Override
@@ -200,9 +235,35 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
                 mFavoriteMovies = new MovieList(simpleFavoriteMovies);
 
-                if(currentSorting == SORTING_FAVORITES){
+                if(currentSorting.equals(SORTING_FAVORITES)){
                     mMovieListAdapter.clearData();
-                    mMovieListAdapter.appendData(mFavoriteMovies);
+                    mMovieListAdapter.appendData(mFavoriteMovies, SORTING_FAVORITES);
+                }
+            }
+        });
+
+        viewModel.getPopularMovies().observe(this, new Observer<MovieList>() {
+            @Override
+            public void onChanged(@Nullable MovieList movies) {
+
+                mPopularMovies = movies;
+
+                if(currentSorting.equals(NetworkUtils.PATH_POPULAR)){
+                    mMovieListAdapter.clearData();
+                    mMovieListAdapter.appendData(mPopularMovies, NetworkUtils.PATH_POPULAR);
+                }
+            }
+        });
+
+        viewModel.getTopRatedMovies().observe(this, new Observer<MovieList>() {
+            @Override
+            public void onChanged(@Nullable MovieList movies) {
+
+                mTopRatedMovies = movies;
+
+                if(currentSorting.equals(NetworkUtils.PATH_TOP_RATED)){
+                    mMovieListAdapter.clearData();
+                    mMovieListAdapter.appendData(mTopRatedMovies, NetworkUtils.PATH_TOP_RATED);
                 }
             }
         });
@@ -225,8 +286,14 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
                 // load more data before reaching the end of list (10 elements earlier)
                 if (firstVisibleItemPos + visibleItemCount >= totalItemCount - 10 && !isLoading) {
-                    FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPages + 1);
-                    new FetchMoviesTask().execute(params);
+                    if(currentSorting.equals(NetworkUtils.PATH_POPULAR)) {
+                        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesPopular + 1);
+                        new FetchMoviesTask().execute(params);
+                    }
+                    else if(currentSorting.equals(NetworkUtils.PATH_TOP_RATED)) {
+                        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesTopRated + 1);
+                        new FetchMoviesTask().execute(params);
+                    }
                 }
             }
         }
