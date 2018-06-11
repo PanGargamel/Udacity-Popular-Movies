@@ -10,7 +10,7 @@ import java.util.List;
 import pl.piotrskiba.android.popularmovies.database.AppDatabase;
 import pl.piotrskiba.android.popularmovies.database.MovieEntry;
 
-class MainViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     private final LiveData<List<MovieEntry>> favoriteMovies;
 
