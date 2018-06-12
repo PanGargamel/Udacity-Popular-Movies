@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private MovieList mTopRatedMovies;
     private MovieList mPopularMovies;
 
-    private final static String SCROLL_POSITION_KEY = "scrollposition";
+    private final static String CURRENT_SORTING_KEY = "current_sorting";
 
     MainViewModel viewModel;
 
@@ -78,9 +78,16 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
         setupViewModel();
 
-        mMovieListAdapter.clearData();
-        FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesPopular + 1);
-        new FetchMoviesTask().execute(params);
+        if(savedInstanceState == null) {
+            mMovieListAdapter.clearData();
+            FetchMoviesTaskParams params = new FetchMoviesTaskParams(currentSorting, mMovieListAdapter.loadedPagesPopular + 1);
+            new FetchMoviesTask().execute(params);
+        }
+        else{
+            if(savedInstanceState.containsKey(CURRENT_SORTING_KEY)){
+                currentSorting = savedInstanceState.getString(CURRENT_SORTING_KEY);
+            }
+        }
     }
 
 
@@ -238,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 if(currentSorting.equals(SORTING_FAVORITES)){
                     mMovieListAdapter.clearData();
                     mMovieListAdapter.appendData(mFavoriteMovies, SORTING_FAVORITES);
+                    showDefaultLayout();
                 }
             }
         });
@@ -251,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 if(currentSorting.equals(NetworkUtils.PATH_POPULAR)){
                     mMovieListAdapter.clearData();
                     mMovieListAdapter.appendData(mPopularMovies, NetworkUtils.PATH_POPULAR);
+                    showDefaultLayout();
                 }
             }
         });
@@ -264,16 +273,24 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 if(currentSorting.equals(NetworkUtils.PATH_TOP_RATED)){
                     mMovieListAdapter.clearData();
                     mMovieListAdapter.appendData(mTopRatedMovies, NetworkUtils.PATH_TOP_RATED);
+                    showDefaultLayout();
                 }
             }
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(CURRENT_SORTING_KEY, currentSorting);
+    }
+
     /*
-    Pagination handling
-    Source:
-        https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
-     */
+        Pagination handling
+        Source:
+            https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
+         */
     private final RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
